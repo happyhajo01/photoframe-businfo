@@ -1,0 +1,267 @@
+/* ─── Main page layout ───────────────────────────────────────────────────────── */
+
+.main-page {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  background: var(--color-bg);
+}
+
+/* ─── UI layer (date / clock / nav) ─────────────────────────────────────────── */
+.ui-layer {
+  position: relative;
+  z-index: 2;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  padding: 28px 28px 16px;
+  gap: 20px;
+  /* 상단 텍스트 가독성 보조 그라디언트 */
+  background: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0.55) 0%,
+    rgba(0, 0, 0, 0.25) 70%,
+    transparent 100%
+  );
+}
+
+/* ─── Top bar (date + weather) ──────────────────────────────────────────────── */
+.top-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.date-block {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  font-size: 40px;         /* 2× 원래 22px */
+  font-weight: 600;
+  letter-spacing: -0.5px;
+}
+.date-block__date { color: var(--color-text); }
+.date-block__sep  { color: var(--color-border); }
+.date-block__day  { color: var(--color-text-dim); }
+.date-block__day.holiday  { color: var(--color-holiday); }
+.date-block__day.saturday { color: var(--color-saturday); }
+.date-block__day.sunday   { color: var(--color-sunday); }
+
+.weather-temp {
+  font-size: 44px;         /* 2× 원래 22px */
+  font-weight: 700;
+  color: var(--color-text);
+}
+
+/* ─── Middle section ─────────────────────────────────────────────────────────── */
+.middle {
+  display: flex;
+  flex: 1;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 24px;
+}
+
+/* ─── Clock ─────────────────────────────────────────────────────────────────── */
+.clock-block {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+.clock-block__time {
+  font-family: var(--font-clock);
+  font-size: clamp(160px, 38vw, 320px); /* 2× 원래 clamp(96px,22vw,180px) */
+  font-weight: 800;
+  line-height: 0.9;
+  letter-spacing: -6px;
+  color: #fff;
+  text-shadow: 0 4px 32px rgba(0,0,0,0.4);
+}
+.clock-block__seconds {
+  font-family: var(--font-clock);
+  font-size: clamp(56px, 11vw, 100px);  /* 2× 원래 clamp(32px,6vw,56px) */
+  font-weight: 300;
+  color: rgba(255,255,255,0.75);
+  letter-spacing: -2px;
+  margin-top: -8px;
+  margin-left: 8px;
+}
+
+/* ─── 3-day forecast ─────────────────────────────────────────────────────────── */
+.forecast-block {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 20px;
+  min-width: 200px;
+}
+.forecast-item {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 16px 20px;
+  border-radius: var(--radius-sm);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+}
+.forecast-item__date {
+  font-size: 26px;          /* 2× 원래 14px → 26px (가독성 고려) */
+  color: var(--color-text-dim);
+  min-width: 64px;
+  line-height: 1.3;
+}
+.forecast-item__date span { font-size: 20px; color: var(--color-text-muted); }
+.forecast-item img   { width: 56px; height: 56px; } /* 2× 원래 32px */
+.forecast-item__temp {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  font-size: 24px;          /* 2× 원래 13px → 24px */
+  margin-left: auto;
+}
+.forecast-item__max { font-weight: 700; color: #ffb347; }
+.forecast-item__min { color: var(--color-text-muted); }
+
+/* ─── Navigation buttons (뷰포트 바닥 50px 위 고정) ────────────────────────── */
+.nav-buttons {
+  position: fixed;
+  bottom: 50px;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+  flex-wrap: wrap;
+  padding: 0 28px;
+}
+.nav-btn {
+  padding: 24px 44px;       /* 2× 원래 14px 28px */
+  font-size: 32px;          /* 2× 원래 18px → 32px */
+  font-weight: 600;
+  border-radius: var(--radius-md);
+  background: var(--color-surface-md);
+  border: 1px solid var(--color-border);
+  color: var(--color-text);
+  cursor: pointer;
+  transition: all var(--transition-fast) var(--ease-out);
+  backdrop-filter: blur(12px);
+  min-width: 180px;
+}
+.nav-btn:hover  { background: var(--color-surface-hi); transform: translateY(-2px); box-shadow: var(--shadow-md); }
+.nav-btn:active { transform: translateY(0); }
+
+/* ─── Slideshow (전체 화면 배경) ────────────────────────────────────────────── */
+.slideshow {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+}
+
+.slideshow__slide {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  opacity: 0;
+  will-change: transform, opacity, filter;
+}
+
+.slideshow__blur-bg {
+  position: absolute;
+  inset: -40px;
+  background-size: cover;
+  background-position: center;
+  filter: blur(32px) brightness(0.48) saturate(1.2);
+}
+
+.slideshow__media {
+  position: relative;
+  z-index: 1;
+  display: block;
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  /* 4면 가장자리 페이드 → 블러 배경과 자연스럽게 합성 */
+  -webkit-mask-image:
+    linear-gradient(to right,  transparent 0%, black 7%, black 93%, transparent 100%),
+    linear-gradient(to bottom, transparent 0%, black 7%, black 93%, transparent 100%);
+  -webkit-mask-composite: source-in;
+  mask-image:
+    linear-gradient(to right,  transparent 0%, black 7%, black 93%, transparent 100%),
+    linear-gradient(to bottom, transparent 0%, black 7%, black 93%, transparent 100%);
+  mask-composite: intersect;
+}
+
+video.slideshow__media {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  -webkit-mask-image:
+    linear-gradient(to right,  transparent 0%, black 5%, black 95%, transparent 100%),
+    linear-gradient(to bottom, transparent 0%, black 5%, black 95%, transparent 100%);
+  -webkit-mask-composite: source-in;
+  mask-image:
+    linear-gradient(to right,  transparent 0%, black 5%, black 95%, transparent 100%),
+    linear-gradient(to bottom, transparent 0%, black 5%, black 95%, transparent 100%);
+  mask-composite: intersect;
+}
+
+/* ─── Effect toggle ──────────────────────────────────────────────────────────── */
+.effect-toggle {
+  position: fixed;
+  bottom: 170px;
+  right: 28px;
+  z-index: 100;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: rgba(0,0,0,0.35);
+  border: 1px solid rgba(255,255,255,0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 18px;
+  transition: all var(--transition-fast);
+  backdrop-filter: blur(8px);
+}
+.effect-toggle:hover { background: rgba(0,0,0,0.55); }
+
+/* ─── Slide counter dots ─────────────────────────────────────────────────────── */
+.slide-counter {
+  position: fixed;
+  bottom: 170px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 100;
+  display: flex;
+  gap: 6px;
+}
+.slide-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.35);
+  transition: all var(--transition-mid);
+}
+.slide-dot.active {
+  background: #fff;
+  width: 20px;
+  border-radius: 3px;
+}
+
+/* ─── Night mode overlay ─────────────────────────────────────────────────────── */
+.night-overlay {
+  position: fixed;
+  inset: 0;
+  background: #000;
+  z-index: 1000;
+  display: none;
+}
+.night-overlay.active { display: block; }

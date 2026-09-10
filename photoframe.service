@@ -1,0 +1,23 @@
+[Unit]
+Description=Raspberry Pi Photo Frame (Flask backend)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=pi
+WorkingDirectory=/home/pi/photoframe-businfo
+ExecStart=/home/pi/photoframe-businfo/venv/bin/python app.py
+Restart=always
+RestartSec=5
+RestartPreventExitStatus=130 143
+# 모니터 전원 제어(wlopm)가 cage의 Wayland 소켓에 접근할 수 있도록 지정
+Environment=WAYLAND_DISPLAY=wayland-1
+Environment=XDG_RUNTIME_DIR=/run/user/1000
+# stdout/stderr를 journal에 기록
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=photoframe
+
+[Install]
+WantedBy=multi-user.target

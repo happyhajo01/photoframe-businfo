@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% block title %}출근 정보{% endblock %}
+{% block styles %}
+<link rel="stylesheet" href="/static/css/main.css">
+<link rel="stylesheet" href="/static/css/bus.css">
+{% endblock %}
+
+{% block body %}
+<!-- Slideshow background (shared with main page) -->
+<div class="slideshow" id="slideshow" aria-hidden="true"></div>
+
+<div class="bus-page commute-page">
+
+  <!-- Header -->
+  <div class="page-header">
+    <button class="btn" onclick="location.href='/'" aria-label="메인으로">← 처음으로</button>
+    <div class="page-header__title">
+      출근 정보
+      <div class="page-header__meta" id="updateMeta">로딩 중…</div>
+    </div>
+    <div style="width:90px"></div>
+  </div>
+
+  <!-- Content -->
+  <div class="bus-content">
+    <div class="bus-clock" id="busClock" aria-label="현재 시각">--:--</div>
+
+    <!-- Commute cards (1 card per bus route, 2 arrival times side by side) -->
+    <div class="stops-grid" id="stopsGrid" aria-live="polite">
+      <div style="text-align:center;color:var(--color-text-muted);padding:40px">
+        출근 정보를 불러오는 중…
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <div class="bus-footer">
+    <button class="btn btn--primary" id="refreshBtn" onclick="window.commutePage.refresh()" aria-label="새로고침">
+      🔄 새로고침
+    </button>
+    <div class="bus-footer__timer" id="autoReturnTimer">자동 복귀: --분</div>
+    <button class="btn" onclick="location.href='/'" aria-label="메인으로">처음으로</button>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="/static/js/core/api.js"></script>
+<script src="/static/js/modules/slideshow.js"></script>
+<script src="/static/js/modules/clock.js"></script>
+<script src="/static/js/pages/commute.js"></script>
+<script>
+  (async () => {
+    const show = new Slideshow('#slideshow', { interval: 30000, effects: ['crossFade','zoomIn','zoomOut','fadeBlur'] });
+    try { const { items } = await API.media(); if (items.length) { show.load(items); show.start(); } } catch (_) {}
+  })();
+</script>
+{% endblock %}

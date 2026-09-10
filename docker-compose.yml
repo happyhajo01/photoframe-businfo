@@ -1,0 +1,22 @@
+services:
+  photoframe:
+    build: .
+    container_name: photoframe
+    ports:
+      - "5000:5000"
+    volumes:
+      # 사진 폴더 — 호스트에서 직접 관리
+      - ./static/images/photos:/app/static/images/photos
+      # 설정·캐시 데이터 영속 보관
+      - ./data:/app/data
+      # API 키 등 환경 설정 (읽기 전용)
+      - ./config/.env:/app/config/.env:ro
+    environment:
+      - MONITOR_CONTROL=false
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-sf", "http://localhost:5000/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 15s

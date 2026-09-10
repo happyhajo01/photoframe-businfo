@@ -1,0 +1,29 @@
+# Git
+.git
+.gitignore
+
+# 가상환경
+venv/
+.venv/
+
+# 캐시
+__pycache__/
+*.pyc
+*.pyo
+.pytest_cache/
+
+# 개발 환경 설정
+config/.env
+.env
+
+# 대용량 미디어 (볼륨으로 마운트)
+static/images/photos/
+data/thumbnails/
+data/weather_cache.json
+data/bus_cache.json
+
+# IDE
+.vscode/
+.claude/
+*.md
+docs/

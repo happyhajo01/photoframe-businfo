@@ -1,0 +1,264 @@
+/* ─── Bus Stop & Commute pages ─────────────────────────────────────────────── */
+
+/* ─── Page header ────────────────────────────────────────────────────────────── */
+.page-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-md) var(--space-lg);
+  background: rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--color-border);
+  flex-shrink: 0;
+}
+.page-header__title {
+  font-size: 22px;
+  font-weight: 700;
+  text-align: center;
+  color: var(--color-text);
+}
+.page-header__meta {
+  font-size: 13px;
+  color: var(--color-text-muted);
+  margin-top: 2px;
+  font-weight: 400;
+}
+
+.bus-page {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  background: transparent;   /* slideshow 배경이 비치도록 */
+  overflow: hidden;
+  position: relative;
+  z-index: 1;
+}
+
+/* ─── Content area ───────────────────────────────────────────────────────────── */
+.bus-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: var(--space-lg);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+}
+
+/* ─── Clock strip ────────────────────────────────────────────────────────────── */
+.bus-clock {
+  text-align: center;
+  font-family: var(--font-clock);
+  font-size: clamp(56px, 12vw, 96px);
+  font-weight: 800;
+  letter-spacing: -2px;
+  color: #fff;
+  text-shadow: 0 2px 16px rgba(0,0,0,0.4);
+  line-height: 1;
+}
+
+/* ─── Stop grid (2-column on wide, 1-col on narrow) ─────────────────────────── */
+.stops-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-lg);
+}
+@media (max-width: 700px) {
+  .stops-grid { grid-template-columns: 1fr; }
+}
+
+/* ─── Individual stop card ───────────────────────────────────────────────────── */
+.stop-card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-lg);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+.stop-card__name {
+  font-size: 36px;
+  font-weight: 700;
+  text-align: center;
+  color: var(--color-text);
+  padding-bottom: var(--space-sm);
+  border-bottom: 1px solid var(--color-border);
+}
+
+/* ─── Arrival row ────────────────────────────────────────────────────────────── */
+.arrival-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  padding: 16px 20px;
+  border-radius: var(--radius-md);
+  background: var(--color-surface-md);
+  border-left: 5px solid transparent;
+  transition: background var(--transition-mid), border-color var(--transition-mid), box-shadow var(--transition-mid);
+}
+
+/* 긴급도별 행 배경 + 왼쪽 테두리 강조 */
+.arrival-row.urgent {
+  background: rgba(255, 80, 80, 0.22);
+  border-left-color: var(--color-urgent);
+  box-shadow: inset 0 0 24px rgba(255, 80, 80, 0.12);
+}
+.arrival-row.warning {
+  background: rgba(80, 160, 255, 0.18);
+  border-left-color: var(--color-warning);
+  box-shadow: inset 0 0 24px rgba(80, 160, 255, 0.10);
+}
+.arrival-row.normal {
+  background: rgba(120, 224, 143, 0.10);
+  border-left-color: rgba(120, 224, 143, 0.4);
+}
+.arrival-row.ended {
+  background: rgba(140, 140, 140, 0.10);
+  border-left-color: rgba(140, 140, 140, 0.3);
+}
+.arrival-row.waiting {
+  background: rgba(255, 200, 50, 0.10);
+  border-left-color: rgba(255, 200, 50, 0.4);
+}
+
+.arrival-row__route {
+  font-size: 40px;
+  font-weight: 800;
+  min-width: 100px;
+  color: var(--color-text);
+  letter-spacing: -1px;
+}
+.arrival-row__icon {
+  font-size: 36px;
+}
+.arrival-times {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-left: auto;
+}
+.arrival-time {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 2px;
+}
+.arrival-time__label {
+  font-size: 32px;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+}
+.arrival-time__nth {
+  font-size: 22px;
+  color: var(--color-text-muted);
+}
+
+/* 긴급도별 라벨 색상 */
+.arrival-time.urgent  .arrival-time__label { color: var(--color-urgent); }
+.arrival-time.warning .arrival-time__label { color: var(--color-warning); }
+.arrival-time.normal  .arrival-time__label { color: var(--color-text-dim); }
+
+/* No data state */
+.arrival-row--empty {
+  justify-content: center;
+  color: var(--color-text-muted);
+  font-size: 26px;
+}
+
+/* ─── Bottom bar ─────────────────────────────────────────────────────────────── */
+.bus-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-md) var(--space-lg);
+  background: rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-top: 1px solid var(--color-border);
+  gap: var(--space-md);
+  flex-shrink: 0;
+}
+.bus-footer__timer {
+  font-size: 14px;
+  color: var(--color-text-muted);
+}
+
+/* ─── Commute page: 1-column focus cards ────────────────────────────────────── */
+.commute-page .stops-grid {
+  grid-template-columns: 1fr;
+}
+.commute-card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-xl);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+.commute-card__route {
+  font-size: 48px;
+  font-weight: 800;
+  text-align: center;
+  color: var(--color-text);
+  letter-spacing: -1px;
+}
+.commute-times {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-md);
+}
+.commute-time-card {
+  border-radius: var(--radius-md);
+  padding: var(--space-lg) var(--space-md);
+  text-align: center;
+  cursor: pointer;
+  transition: all var(--transition-mid);
+  border: 2px solid transparent;
+  background: var(--color-surface-md);
+}
+.commute-time-card:hover { transform: scale(1.02); }
+.commute-time-card__label {
+  font-size: 56px;
+  font-weight: 800;
+  letter-spacing: -1px;
+}
+.commute-time-card__sub {
+  font-size: 22px;
+  color: var(--color-text-muted);
+  margin-top: 6px;
+}
+
+/* 긴급도별 배경 + 테두리 */
+.commute-time-card.urgent {
+  background: rgba(255, 80, 80, 0.22);
+  border-color: var(--color-urgent);
+  box-shadow: 0 0 20px rgba(255, 80, 80, 0.25);
+}
+.commute-time-card.warning {
+  background: rgba(80, 160, 255, 0.18);
+  border-color: var(--color-warning);
+  box-shadow: 0 0 20px rgba(80, 160, 255, 0.20);
+}
+.commute-time-card.normal {
+  background: rgba(120, 224, 143, 0.10);
+  border-color: rgba(120, 224, 143, 0.35);
+}
+
+/* 긴급도별 라벨 색상 */
+.commute-time-card.urgent  .commute-time-card__label { color: var(--color-urgent); }
+.commute-time-card.warning .commute-time-card__label { color: var(--color-warning); }
+.commute-time-card.normal  .commute-time-card__label { color: var(--color-success); }
+
+/* ─── Ripple animation on commute card click ────────────────────────────────── */
+@keyframes ripple-urgent {
+  0%   { box-shadow: 0 0 0 0 rgba(255, 80, 80, 0.6); }
+  100% { box-shadow: 0 0 0 30px transparent; }
+}
+@keyframes ripple-ok {
+  0%   { box-shadow: 0 0 0 0 rgba(120, 224, 143, 0.6); }
+  100% { box-shadow: 0 0 0 30px transparent; }
+}
+.commute-time-card.ripple-urgent  { animation: ripple-urgent  0.6s ease-out; }
+.commute-time-card.ripple-ok      { animation: ripple-ok      0.6s ease-out; }

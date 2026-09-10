@@ -1,0 +1,33 @@
+# API 키 등 민감 설정
+config/.env
+.env
+
+# 런타임 데이터 (정류소/설정은 설정 페이지에서 자동 저장, 캐시·로그는 재생성됨)
+data/app_settings.json
+data/bus_stops.json
+data/commute_stops.json
+data/bus_cache.json
+data/weather_cache.json
+data/holiday_cache.json
+data/thumbnails/
+data/*.log
+
+# 사용자 사진·동영상 (용량이 크고 개인 자료라 저장소에 포함하지 않음)
+static/images/photos/*
+!static/images/photos/.gitkeep
+
+# 파이썬
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+venv/
+*.egg-info/
+
+# OS / 에디터
+.DS_Store
+Thumbs.db
+.vscode/
+
+# 프로젝트 로컬 설정
+.claude/settings.local.json

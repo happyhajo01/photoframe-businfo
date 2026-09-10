@@ -1,0 +1,58 @@
+/* ─── Design Tokens ─────────────────────────────────────────────────────────
+   All colors, spacing, and motion values live here.
+   Change these to retheme the entire app.
+─────────────────────────────────────────────────────────────────────────── */
+:root {
+  /* Palette */
+  --color-bg:          #1a1a2e;
+  --color-surface:     rgba(255, 255, 255, 0.08);
+  --color-surface-md:  rgba(255, 255, 255, 0.12);
+  --color-surface-hi:  rgba(255, 255, 255, 0.18);
+  --color-border:      rgba(255, 255, 255, 0.15);
+  --color-text:        #ffffff;
+  --color-text-dim:    rgba(255, 255, 255, 0.65);
+  --color-text-muted:  rgba(255, 255, 255, 0.40);
+
+  /* Accent */
+  --color-primary:     #7c9ef8;
+  --color-primary-glow:rgba(124, 158, 248, 0.35);
+  --color-urgent:      #ff7b7b;
+  --color-warning:     #7bb8ff;
+  --color-success:     #78e08f;
+
+  /* Date color coding */
+  --color-holiday:     #ff6b6b;
+  --color-saturday:    #74b9ff;
+  --color-sunday:      #ff6b6b;
+
+  /* Spacing */
+  --space-xs:  4px;
+  --space-sm:  8px;
+  --space-md:  16px;
+  --space-lg:  24px;
+  --space-xl:  40px;
+
+  /* Radii */
+  --radius-sm: 8px;
+  --radius-md: 16px;
+  --radius-lg: 24px;
+
+  /* Shadows */
+  --shadow-sm: 0 2px 8px rgba(0,0,0,0.3);
+  --shadow-md: 0 4px 20px rgba(0,0,0,0.4);
+  --shadow-lg: 0 8px 40px rgba(0,0,0,0.5);
+
+  /* Typography */
+  --font-main:  'Noto Sans KR', 'Apple SD Gothic Neo', sans-serif;
+  --font-clock: 'Noto Sans KR', monospace;
+
+  /* Motion */
+  --ease-out:   cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in:    cubic-bezier(0.7, 0, 0.84, 0);
+  --ease-inout: cubic-bezier(0.65, 0, 0.35, 1);
+
+  /* Transition speeds */
+  --transition-fast:  150ms;
+  --transition-mid:   300ms;
+  --transition-slow:  600ms;
+}

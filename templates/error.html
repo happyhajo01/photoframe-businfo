@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block title %}오류 {{ code }}{% endblock %}
+{% block body %}
+<div style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:100vh;gap:24px;padding:40px;text-align:center">
+  <div style="font-size:80px">⚠️</div>
+  <div style="font-size:48px;font-weight:800;color:var(--color-urgent)">{{ code }}</div>
+  <div style="font-size:20px;color:var(--color-text-dim)">{{ message }}</div>
+  <button class="btn btn--primary" onclick="location.href='/'" style="margin-top:16px">처음으로 돌아가기</button>
+</div>
+{% endblock %}

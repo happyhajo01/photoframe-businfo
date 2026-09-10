@@ -1,0 +1,148 @@
+{% extends "base.html" %}
+{% block title %}설정{% endblock %}
+{% block styles %}
+<link rel="stylesheet" href="/static/css/settings.css">
+{% endblock %}
+
+{% block body %}
+<div class="settings-page">
+
+  <!-- Header -->
+  <div class="page-header">
+    <button class="btn" onclick="location.href='/'" aria-label="메인으로">← 처음으로</button>
+    <div class="page-header__title">설정</div>
+    <div style="width:90px"></div>
+  </div>
+
+  <!-- Content -->
+  <div class="settings-content" id="settingsContent">
+
+    <!-- ── 정류소 설정 ── -->
+    <div class="settings-section">
+      <div class="settings-section__title">🚌 정류소 설정</div>
+      <table class="stop-table" id="busStopsTable">
+        <thead>
+          <tr>
+            <th style="width:30%">정류소 이름</th>
+            <th style="width:22%">정류소 ID</th>
+            <th>검색할 버스번호 (쉼표 구분)</th>
+            <th style="width:70px"></th>
+          </tr>
+        </thead>
+        <tbody id="busStopsBody">
+          <!-- rows injected by JS -->
+        </tbody>
+      </table>
+      <button class="btn" onclick="window.settingsPage.addBusStop()" style="align-self:flex-start">
+        + 정류소 추가
+      </button>
+    </div>
+
+    <!-- ── 출근 설정 ── -->
+    <div class="settings-section">
+      <div class="settings-section__title">🏃 출근 설정</div>
+      <table class="stop-table" id="commuteStopsTable">
+        <thead>
+          <tr>
+            <th style="width:30%">정류소 이름</th>
+            <th style="width:22%">정류소 ID</th>
+            <th>검색할 버스번호 (쉼표 구분)</th>
+            <th style="width:70px"></th>
+          </tr>
+        </thead>
+        <tbody id="commuteStopsBody">
+          <!-- rows injected by JS -->
+        </tbody>
+      </table>
+      <button class="btn" onclick="window.settingsPage.addCommuteStop()" style="align-self:flex-start">
+        + 출근 정류소 추가
+      </button>
+    </div>
+
+    <!-- ── 시간 설정 ── -->
+    <div class="settings-section">
+      <div class="settings-section__title">⏱ 시간 설정</div>
+      <div class="settings-grid">
+        <div class="settings-field">
+          <label for="photoInterval">사진 전환 간격 (초)</label>
+          <input class="settings-input" type="number" id="photoInterval" min="5" max="300" value="30">
+          <small>5 ~ 300초</small>
+        </div>
+        <div class="settings-field">
+          <label for="busUpdateInterval">버스 정보 갱신 (초)</label>
+          <input class="settings-input" type="number" id="busUpdateInterval" min="10" max="600" value="60">
+          <small>10 ~ 600초</small>
+        </div>
+        <div class="settings-field">
+          <label for="autoReturnMinutes">자동 복귀 시간 (분)</label>
+          <input class="settings-input" type="number" id="autoReturnMinutes" min="5" max="60" value="20">
+          <small>5 ~ 60분</small>
+        </div>
+        <div class="settings-field">
+          <label for="weatherUpdateInterval">날씨 갱신 간격 (분)</label>
+          <input class="settings-input" type="number" id="weatherUpdateInterval" min="10" max="120" value="30">
+          <small>10 ~ 120분</small>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── 모니터 제어 ── -->
+    <div class="settings-section">
+      <div class="settings-section__title">🖥 모니터 스케줄</div>
+      <div class="settings-grid">
+        <div class="settings-field">
+          <label for="monitorOffTime">모니터 꺼지는 시각</label>
+          <input class="settings-input" type="time" id="monitorOffTime" value="23:50">
+          <small>설정 시각에 화면이 꺼집니다</small>
+        </div>
+        <div class="settings-field">
+          <label for="monitorOnTime">모니터 켜지는 시각</label>
+          <input class="settings-input" type="time" id="monitorOnTime" value="05:10">
+          <small>설정 시각에 화면이 켜집니다</small>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── 슬라이드쇼 설정 ── -->
+    <div class="settings-section">
+      <div class="settings-section__title">📸 슬라이드쇼 설정</div>
+      <div class="settings-grid">
+        <div class="settings-field">
+          <label for="transitionSpeed">전환 속도 (ms)</label>
+          <input class="settings-input" type="number" id="transitionSpeed" min="200" max="2000" value="800">
+          <small>200 ~ 2000ms</small>
+        </div>
+      </div>
+      <div class="settings-field" style="margin-top:var(--space-md)">
+        <label>슬라이드 전환 효과 (복수 선택 가능)</label>
+        <div class="effect-chips" id="effectChips">
+          <button class="chip active" data-effect="crossFade">크로스 페이드</button>
+          <button class="chip active" data-effect="slideLeft">슬라이드 ←</button>
+          <button class="chip active" data-effect="slideRight">슬라이드 →</button>
+          <button class="chip active" data-effect="zoomIn">줌 인</button>
+          <button class="chip active" data-effect="zoomOut">줌 아웃</button>
+          <button class="chip active" data-effect="fadeBlur">페이드 블러</button>
+          <button class="chip" data-effect="slideUp">슬라이드 ↑</button>
+          <button class="chip" data-effect="kenBurns">켄 번즈</button>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /settings-content -->
+
+  <!-- Save bar -->
+  <div class="settings-save-bar">
+    <div class="settings-save-bar__status" id="saveStatus"></div>
+    <button class="btn" onclick="location.href='/'" aria-label="취소">취소</button>
+    <button class="btn btn--primary" onclick="window.settingsPage.save()" aria-label="저장">
+      💾 저장
+    </button>
+  </div>
+
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="/static/js/core/api.js"></script>
+<script src="/static/js/pages/settings.js"></script>
+{% endblock %}

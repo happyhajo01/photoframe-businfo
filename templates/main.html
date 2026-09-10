@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+{% block title %}Photo Frame — 메인{% endblock %}
+{% block styles %}
+<link rel="stylesheet" href="/static/css/main.css">
+{% endblock %}
+
+{% block body %}
+<div class="main-page" id="mainPage">
+
+  <!-- ── UI layer ── -->
+  <div class="ui-layer">
+
+    <!-- Top bar: date + weather -->
+    <div class="top-bar">
+      <div class="date-block">
+        <span class="date-block__date" id="dateDisplay">로딩 중…</span>
+        <span class="date-block__sep">|</span>
+        <span class="date-block__day" id="dayDisplay"></span>
+        <span class="date-block__sep">|</span>
+        <img id="weatherIcon" src="/static/images/weather/cloudy_day.png" width="56" height="56"
+             style="filter:drop-shadow(0 2px 6px rgba(0,0,0,0.5))" alt="날씨">
+        <span id="weatherTemp" class="weather-temp">--°C</span>
+      </div>
+    </div>
+
+    <!-- Middle: clock + forecast -->
+    <div class="middle">
+      <div class="clock-block">
+        <div class="clock-block__time" id="clockTime">00:00</div>
+        <div class="clock-block__seconds" id="clockSeconds">00</div>
+      </div>
+
+      <div class="forecast-block card" id="forecastBlock" aria-label="3일 예보">
+        <!-- Injected by JS -->
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ── Slideshow (full-screen background) ── -->
+  <div class="slideshow" id="slideshow" aria-hidden="true"></div>
+  <div class="slide-counter" id="slideCounter" aria-hidden="true"></div>
+  <button class="effect-toggle" id="effectToggle" title="슬라이드 효과 토글" aria-label="슬라이드 효과">✨</button>
+
+  <!-- ── Navigation (제일 하단) ── -->
+  <div class="nav-buttons">
+    <button class="nav-btn" onclick="location.href='/settings'" aria-label="설정 페이지">⚙️ 설정</button>
+    <button class="nav-btn" onclick="location.href='/bus'"      aria-label="정류소 페이지">🚌 정류소</button>
+    <button class="nav-btn" onclick="location.href='/commute'"  aria-label="출근 페이지">🏃 출근</button>
+  </div>
+
+  <!-- Night mode blackout -->
+  <div class="night-overlay" id="nightOverlay" aria-hidden="true"></div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="/static/js/core/api.js"></script>
+<script src="/static/js/modules/slideshow.js"></script>
+<script src="/static/js/modules/clock.js"></script>
+<script src="/static/js/pages/main.js"></script>
+{% endblock %}

@@ -1,0 +1,109 @@
+/**
+ * Main page controller.
+ * Orchestrates the clock, slideshow, weather display, and night mode.
+ */
+(async () => {
+  // ─── Elements ──────────────────────────────────────────────────────────────
+  const dateEl    = document.getElementById('dateDisplay');
+  const dayEl     = document.getElementById('dayDisplay');
+  const iconEl    = document.getElementById('weatherIcon');
+  const tempEl    = document.getElementById('weatherTemp');
+  const forecastEl= document.getElementById('forecastBlock');
+  const effectBtn = document.getElementById('effectToggle');
+  const nightEl   = document.getElementById('nightOverlay');
+
+  // ─── Settings ─────────────────────────────────────────────────────────────
+  let settings = {};
+  try { ({ app_settings: settings } = await API.getSettings()); } catch (_) {}
+  const photoInterval    = (settings.photo_interval    ?? 30)   * 1000;
+  const weatherInterval  = (settings.weather_update_interval ?? 1800) * 1000;
+  const transitionSpeed  = settings.transition_speed  ?? 800;
+  const effects          = settings.slideshow_effects ?? ['crossFade', 'slideLeft', 'slideRight', 'zoomIn', 'zoomOut', 'fadeBlur'];
+
+  // ─── Clock ────────────────────────────────────────────────────────────────
+  Clock.start({ time: '#clockTime', seconds: '#clockSeconds' });
+
+  // ─── Slideshow ────────────────────────────────────────────────────────────
+  const show = new Slideshow('#slideshow', {
+    interval: photoInterval,
+    effects,
+    speed: transitionSpeed,
+  });
+
+  try {
+    const { items } = await API.media();
+    if (items.length) {
+      show.load(items);
+      show.start();
+    }
+  } catch (e) {
+    console.warn('Media load failed:', e);
+  }
+
+  // Effect toggle button
+  effectBtn.addEventListener('click', () => {
+    const on = show.toggleEffects();
+    effectBtn.textContent = on ? '✨' : '▶';
+    effectBtn.title = on ? '효과 끄기' : '효과 켜기';
+  });
+
+  // Keyboard controls
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowRight') show.next();
+    if (e.key === 'ArrowLeft')  show.prev();
+    if (e.key === ' ') { e.preventDefault(); show.toggleEffects(); }
+  });
+
+  // ─── Weather ──────────────────────────────────────────────────────────────
+  async function loadWeather() {
+    try {
+      const data = await API.weather();
+
+      // Date & day
+      const { full, day, is_sat, is_sun, holiday } = data.date;
+      dateEl.textContent = full;
+      dayEl.textContent  = holiday || day;
+      dayEl.className    = 'date-block__day' +
+        (holiday || is_sun ? ' holiday' : is_sat ? ' saturday' : '');
+
+      // Current weather
+      const cur = data.current;
+      iconEl.src         = `/static/images/weather/${cur.icon}`;
+      iconEl.alt         = cur.label;
+      tempEl.textContent = `${cur.temperature}°C`;
+
+      // 3-day forecast
+      forecastEl.innerHTML = data.forecast.map(f => `
+        <div class="forecast-item">
+          <span class="forecast-item__date">${f.date}<br><span>${f.day}</span></span>
+          <img src="/static/images/weather/${f.icon}" width="56" height="56" alt="${f.label}">
+          <div class="forecast-item__temp">
+            <span class="forecast-item__max">${f.max}°</span>
+            <span class="forecast-item__min">${f.min}°</span>
+          </div>
+        </div>
+      `).join('');
+    } catch (e) {
+      console.warn('Weather load failed:', e);
+    }
+  }
+
+  loadWeather();
+  setInterval(loadWeather, weatherInterval);
+
+  // ─── Night mode ────────────────────────────────────────────────────────────
+  function checkNightMode() {
+    const start = settings.night_mode_start ?? '00:00';
+    const end   = settings.night_mode_end   ?? '06:00';
+    const now   = new Date();
+    const cur   = now.getHours() * 60 + now.getMinutes();
+    const [sh, sm] = start.split(':').map(Number);
+    const [eh, em] = end.split(':').map(Number);
+    const s = sh * 60 + sm, e = eh * 60 + em;
+    const isNight = s > e ? (cur >= s || cur < e) : (cur >= s && cur < e);
+    nightEl.classList.toggle('active', isNight);
+  }
+
+  checkNightMode();
+  setInterval(checkNightMode, 60000);
+})();
