@@ -11,7 +11,7 @@
 이 프로젝트는 **두 부분**으로 동작합니다.
 
 1. **백엔드(Flask 서버)** — 시계·날씨·버스 정보를 계산해서 웹페이지로 제공. `systemd` 서비스로 등록해 **부팅 시 자동 실행**됩니다.
-2. **화면 표시(키오스크 브라우저)** — 라즈베리파이 HDMI 화면에 그 웹페이지를 **자동으로 전체화면**으로 띄웁니다. Lite OS는 데스크톱이 없으므로 `cage`라는 아주 가벼운 화면 프로그램(1개 앱만 전체화면으로 띄우는 전용 프로그램)을 사용합니다.
+2. **화면 표시(키오스크 브라우저)** — 라즈베리파이 HDMI 화면에 그 웹페이지를 **자동으로 전체화면**으로 띄웁니다. Lite OS는 데스크톱이 없으므로 `sway`라는 가벼운 화면 프로그램(터치 시 마우스 커서 자동 숨김 지원)을 사용합니다.
 
 둘 다 systemd/자동 로그인으로 등록하면, **전원 차단 → 재연결 시 아무 조작 없이** 시계·날씨·사진 슬라이드쇼가 화면에 뜹니다.
 
@@ -82,8 +82,8 @@ sudo apt install -y git python3-venv python3-pip python3-dev \
     build-essential libjpeg-dev zlib1g-dev libwebp-dev \
     curl fonts-noto-cjk
 
-# 화면 표시용 키오스크 패키지 (cage: 1개 앱 전용 화면 프로그램)
-sudo apt install -y cage
+# 화면 표시용 키오스크 패키지 (sway: 터치 시 마우스 커서 자동 숨김 지원)
+sudo apt install -y sway
 
 # 크롬 브라우저 설치 (패키지 이름이 배포판마다 달라 둘 다 시도)
 sudo apt install -y chromium-browser || sudo apt install -y chromium
@@ -203,12 +203,12 @@ curl -s http://localhost:5000/ | head -5
 
 ## STEP 9. 화면 자동 표시 (키오스크) 설정
 
-`cage`(전체화면 전용 프로그램)로 Chromium을 띄우는 스크립트가 `scripts/kiosk-start.sh`로 이미 프로젝트에 포함되어 있습니다. 실행 권한만 주고, 콘솔에 자동 로그인될 때 실행되도록 등록합니다.
+`sway`(터치 시 마우스 커서 자동 숨김을 지원하는 화면 합성기)로 Chromium을 띄우는 스크립트가 `scripts/kiosk-start.sh`로 이미 프로젝트에 포함되어 있습니다. 실행 권한만 주고, 콘솔에 자동 로그인될 때 실행되도록 등록합니다.
 
 ### 9-1. 실행 권한 부여
 
 ```bash
-chmod +x ~/photoframe-businfo/scripts/kiosk-start.sh
+chmod +x ~/photoframe-businfo/scripts/kiosk-start.sh ~/photoframe-businfo/scripts/kiosk-browser.sh
 ```
 
 ### 9-2. 콘솔 자동 로그인 시 스크립트 실행 등록
@@ -245,7 +245,7 @@ sudo reboot
 30초~1분 정도 기다리면:
 1. 콘솔에 자동 로그인됨
 2. Flask 서버(`photoframe.service`)가 백그라운드에서 시작됨
-3. `cage`가 Chromium을 전체화면으로 띄우고 포토프레임 메인 화면(시계·날씨·슬라이드쇼)이 표시됨
+3. `sway`가 Chromium을 전체화면으로 띄우고 포토프레임 메인 화면(시계·날씨·슬라이드쇼)이 표시됨
 
 **전원 플러그를 완전히 뽑았다가 다시 꽂아서도** 동일하게 자동 실행되는지 한 번 더 확인해보세요. 이것이 정상적으로 되면 설치가 끝난 것입니다.
 
@@ -346,7 +346,7 @@ sudo systemctl restart photoframe.service
 
 | 증상 | 원인 / 해결 |
 |------|------------|
-| 화면이 검은 화면/커서만 보임 | `journalctl -u photoframe.service -n 50`로 서버가 켜졌는지 확인. 켜졌다면 `cage`/`chromium` 설치 여부, `groups $USER`에 `video` 있는지 확인 후 재부팅 |
+| 화면이 검은 화면/커서만 보임 | `journalctl -u photoframe.service -n 50`로 서버가 켜졌는지 확인. 켜졌다면 `sway`/`chromium` 설치 여부, `groups $USER`에 `video` 있는지 확인 후 재부팅 |
 | 부팅해도 로그인 화면에서 멈춤 | STEP 2의 `raspi-config` → Console Autologin 재확인 |
 | SSH로는 잘 되는데 화면엔 안 뜸 | `~/.bash_profile`이 정확히 생성됐는지, tty1 로그인인지 확인(`tty` 명령으로 확인) |
 | 한글이 네모(□)로 깨짐 | `sudo apt install fonts-noto-cjk` 후 재부팅 |
@@ -364,7 +364,9 @@ sudo systemctl restart photoframe.service
 | `~/photoframe-businfo/config/.env` | API 키, 서버 설정 (직접 작성) |
 | `~/photoframe-businfo/static/images/photos/` | 슬라이드쇼 사진·동영상 |
 | `~/photoframe-businfo/data/*.json` | 정류소·설정 데이터 (설정 페이지에서 자동 저장) |
-| `~/photoframe-businfo/scripts/kiosk-start.sh` | 화면 자동 표시 스크립트 (저장소에 포함) |
+| `~/photoframe-businfo/scripts/kiosk-start.sh` | 화면 자동 표시 진입 스크립트 (저장소에 포함) |
+| `~/photoframe-businfo/scripts/sway.config` | 키오스크용 sway 설정 (저장소에 포함) |
+| `~/photoframe-businfo/scripts/kiosk-browser.sh` | Chromium 키오스크 실행 스크립트 (저장소에 포함) |
 | `~/.bash_profile` | 콘솔 자동 로그인 시 키오스크 실행 트리거 (이번 가이드에서 생성) |
 | `/etc/systemd/system/photoframe.service` | 백엔드 자동 실행 등록 파일 |
 

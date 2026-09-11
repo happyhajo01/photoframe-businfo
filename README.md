@@ -96,7 +96,9 @@ photoframe-businfo/
 │       └── photos/          # 슬라이드쇼 미디어 파일 (직접 추가)
 ├── data/                    # 런타임 데이터 (설정 JSON, 캐시, 썸네일) — git에는 포함되지 않음
 ├── scripts/
-│   └── kiosk-start.sh       # Lite OS 화면 자동 표시(cage + Chromium 키오스크) 스크립트
+│   ├── kiosk-start.sh       # Lite OS 화면 자동 표시(sway + Chromium 키오스크) 진입 스크립트
+│   ├── sway.config          # 키오스크용 sway 최소 설정 (커서 자동 숨김 등)
+│   └── kiosk-browser.sh     # sway가 실행하는 Chromium 키오스크 실행 스크립트
 ├── docs/
 │   ├── API.md               # API 엔드포인트 상세 문서
 │   └── VARIABLES.md         # 설정값/변수 레퍼런스

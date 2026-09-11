@@ -30,7 +30,9 @@
 | docs/API.md | API 엔드포인트 상세 문서 | 2026-09-10 |
 | docs/VARIABLES.md | 설정값/변수 레퍼런스 | 2026-09-10 |
 | photoframe.service | systemd 서비스 — Flask 백엔드 부팅 시 자동 시작 | 2026-09-10 |
-| scripts/kiosk-start.sh | cage + Chromium 키오스크 화면 자동 표시 스크립트 (Lite OS) | 2026-09-10 |
+| scripts/kiosk-start.sh | Flask 대기 후 sway 실행하는 진입 스크립트 (Lite OS) | 2026-09-10 |
+| scripts/sway.config | 키오스크용 sway 최소 설정 (커서 자동 숨김 등) | 2026-09-11 |
+| scripts/kiosk-browser.sh | sway가 exec로 실행하는 Chromium 키오스크 실행 스크립트 | 2026-09-11 |
 | Dockerfile | Flask 앱 Docker 이미지 (선택적 배포 방식) | 2026-09-10 |
 | docker-compose.yml | Docker Compose 구성 (선택적 배포 방식) | 2026-09-10 |
 | .dockerignore | Docker 빌드 제외 목록 | 2026-09-10 |

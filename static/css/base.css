@@ -11,11 +11,6 @@ html, body {
   user-select: none;
 }
 
-/* 마우스 움직임이 없으면 cursor-hide.js가 이 클래스를 붙여 커서를 숨긴다 */
-html.hide-cursor, html.hide-cursor * {
-  cursor: none !important;
-}
-
 /* ─── 키오스크 세로 회전 ────────────────────────────────────────────────────────
    가로 디스플레이 신호를 세로로 세운 모니터에 맞춰 CSS로 90도 돌린다.
    kiosk-start.sh가 ?kiosk=1로 접속하면 base.html의 스크립트가 html에 클래스를 붙인다.
