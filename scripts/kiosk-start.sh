@@ -32,6 +32,4 @@ exec cage -s -- "$BROWSER_CMD" \
     --check-for-update-interval=604800 \
     --ozone-platform=wayland \
     --password-store=basic \
-    --remote-debugging-port=9222 \
-    --remote-allow-origins=* \
     "$URL"
