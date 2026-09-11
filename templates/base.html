@@ -13,23 +13,6 @@
       var rotated = localStorage.getItem('kiosk') === '1';
       if (!rotated) return;
       document.documentElement.classList.add('kiosk-rotate');
-
-      // 일부 터치스크린은 CSS 회전 전(원래 가로) 좌표를 그대로 보고한다.
-      // base.css의 회전 방향(rotate(90deg)/translate(100vw,0))과 짝을 맞춰
-      // 클릭 좌표를 보정한다. 방향을 rotate(-90deg)/translate(0,100vh)로
-      // 바꿨다면 아래도 cx=e.clientY, cy=vh-e.clientX로 함께 바꿔야 한다.
-      document.addEventListener('click', function (e) {
-        if (!e.isTrusted) return; // 우리가 아래서 다시 쏘는 클릭은 건너뜀
-        var vw = window.innerWidth;
-        var cx = vw - e.clientY;
-        var cy = e.clientX;
-        var real = document.elementFromPoint(cx, cy);
-        if (real && real !== e.target) {
-          e.preventDefault();
-          e.stopPropagation();
-          real.click();
-        }
-      }, true);
     })();
   </script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
