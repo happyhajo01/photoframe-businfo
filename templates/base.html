@@ -5,6 +5,16 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <meta name="theme-color" content="#1a1a2e">
   <title>{% block title %}Photo Frame{% endblock %}</title>
+  <script>
+    // 키오스크(?kiosk=1)로 접속한 화면만 세로 회전(html.kiosk-rotate)을 적용한다.
+    (function () {
+      var params = new URLSearchParams(location.search);
+      if (params.get('kiosk') === '1') localStorage.setItem('kiosk', '1');
+      if (localStorage.getItem('kiosk') === '1') {
+        document.documentElement.classList.add('kiosk-rotate');
+      }
+    })();
+  </script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;800&display=swap" rel="stylesheet">

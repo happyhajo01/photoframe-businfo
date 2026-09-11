@@ -11,6 +11,24 @@ html, body {
   user-select: none;
 }
 
+/* ─── 키오스크 세로 회전 ────────────────────────────────────────────────────────
+   가로 디스플레이 신호를 세로로 세운 모니터에 맞춰 CSS로 90도 돌린다.
+   kiosk-start.sh가 ?kiosk=1로 접속하면 base.html의 스크립트가 html에 클래스를 붙인다.
+   화면이 뒤집혀 보이면 아래 rotate(90deg)/translate(100vw,0)를
+   rotate(-90deg)/translate(0,100vh)로 바꾸면 반대 방향으로 돌아간다. */
+html.kiosk-rotate {
+  --vwu: 1vh;
+}
+html.kiosk-rotate body {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vh;
+  height: 100vw;
+  transform-origin: top left;
+  transform: translate(100vw, 0) rotate(90deg);
+}
+
 /* ─── Glass card ────────────────────────────────────────────────────────────── */
 .card {
   background: var(--color-surface);

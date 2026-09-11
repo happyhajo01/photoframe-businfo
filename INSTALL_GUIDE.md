@@ -61,7 +61,7 @@ sudo raspi-config
 ## STEP 3. 시스템 업데이트 및 필수 패키지 설치
 
 ```bash
-sudo apt update && sudo apt full-upgrade -y
+    sudo apt update && sudo apt full-upgrade -y
 ```
 
 ```bash
@@ -341,6 +341,7 @@ sudo systemctl restart photoframe.service
 | 버스/날씨 정보가 "정보 없음" | `.env`의 API 키가 실제 발급받은 값인지 확인. 발급 후 몇 분~몇 시간 지연될 수 있음 |
 | 포트 5000 충돌 오류 | `sudo systemctl restart photoframe.service` (systemd가 자동으로 재시작을 처리함) |
 | 전원 재연결 후 화면 안 뜸 | STEP 10을 다시 수행해 "전원 플러그 뽑았다 꽂기" 테스트로 재현 후, `journalctl -u photoframe.service -b`(이번 부팅 로그)로 원인 확인 |
+| 세로 모니터인데 화면이 가로로 나옴 | 앱이 CSS로 자동 회전한다(`kiosk-start.sh`가 `?kiosk=1`로 접속). 화면이 뒤집혀 보이면 `static/css/base.css`의 `html.kiosk-rotate body` 블록에서 `rotate(90deg)`/`translate(100vw, 0)`를 `rotate(-90deg)`/`translate(0, 100vh)`로 바꾸고 서비스 재시작·재부팅 |
 
 ---
 

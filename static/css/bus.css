@@ -28,7 +28,7 @@
 .bus-page {
   display: flex;
   flex-direction: column;
-  height: 100vh;
+  height: 100%;
   background: transparent;   /* slideshow 배경이 비치도록 */
   overflow: hidden;
   position: relative;
@@ -49,7 +49,7 @@
 .bus-clock {
   text-align: center;
   font-family: var(--font-clock);
-  font-size: clamp(56px, 12vw, 96px);
+  font-size: clamp(56px, calc(12 * var(--vwu)), 96px);
   font-weight: 800;
   letter-spacing: -2px;
   color: #fff;

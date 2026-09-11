@@ -2,8 +2,8 @@
 
 .main-page {
   position: relative;
-  width: 100vw;
-  height: 100vh;
+  width: 100%;
+  height: 100%;
   overflow: hidden;
   display: flex;
   flex-direction: column;
@@ -73,7 +73,7 @@
 }
 .clock-block__time {
   font-family: var(--font-clock);
-  font-size: clamp(160px, 38vw, 320px); /* 2× 원래 clamp(96px,22vw,180px) */
+  font-size: clamp(160px, calc(38 * var(--vwu)), 320px); /* 2× 원래 clamp(96px,22vw,180px) */
   font-weight: 800;
   line-height: 0.9;
   letter-spacing: -6px;
@@ -82,7 +82,7 @@
 }
 .clock-block__seconds {
   font-family: var(--font-clock);
-  font-size: clamp(56px, 11vw, 100px);  /* 2× 원래 clamp(32px,6vw,56px) */
+  font-size: clamp(56px, calc(11 * var(--vwu)), 100px);  /* 2× 원래 clamp(32px,6vw,56px) */
   font-weight: 300;
   color: rgba(255,255,255,0.75);
   letter-spacing: -2px;

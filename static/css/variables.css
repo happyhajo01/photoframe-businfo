@@ -55,4 +55,7 @@
   --transition-fast:  150ms;
   --transition-mid:   300ms;
   --transition-slow:  600ms;
+
+  /* 뷰포트 너비 단위 (세로 회전 키오스크에서는 base.css가 1vh로 덮어씀) */
+  --vwu: 1vw;
 }
