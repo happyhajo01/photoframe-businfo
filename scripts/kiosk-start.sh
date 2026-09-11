@@ -33,5 +33,6 @@ exec cage -s -- "$BROWSER_CMD" \
     --ozone-platform=wayland \
     --password-store=basic \
     --remote-debugging-port=9222 \
+    --remote-debugging-address=0.0.0.0 \
     --remote-allow-origins=* \
     "$URL"
