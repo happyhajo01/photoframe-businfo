@@ -17,7 +17,7 @@
 | `BUS_CACHE_TTL` | `60` | 버스 캐시 유효시간 (초) |
 | `WEATHER_CACHE_TTL` | `1800` | 날씨 캐시 유효시간 (초, 30분) |
 | `HOLIDAY_CACHE_TTL` | `86400` | 공휴일 캐시 유효시간 (초, 24시간) |
-| `MONITOR_OUTPUT` | `HDMI-A-1` | wlr-randr 모니터 출력 이름 |
+| `MONITOR_OUTPUT` | `HDMI-A-2` | wlr-randr 모니터 출력 이름 |
 | `MONITOR_CONTROL` | `true` | 모니터 자동 전원 제어 활성화 |
 
 ---

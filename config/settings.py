@@ -82,5 +82,5 @@ THUMBNAIL_HEIGHT  = 1920
 THUMBNAIL_QUALITY = 85
 
 # ─── Monitor Control (Wayland) ────────────────────────────────────────────────
-MONITOR_OUTPUT  = os.getenv("MONITOR_OUTPUT", "HDMI-A-1")
+MONITOR_OUTPUT  = os.getenv("MONITOR_OUTPUT", "HDMI-A-2")
 MONITOR_ENABLED = os.getenv("MONITOR_CONTROL", "true").lower() == "true"
