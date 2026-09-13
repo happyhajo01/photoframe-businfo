@@ -81,6 +81,16 @@ def api_settings_post():
     ok, message = data_svc.save_all(data)
     return jsonify({"ok": ok, "message": message}), (200 if ok else 422)
 
+@app.route("/api/restart", methods=["POST"])
+def api_restart():
+    """systemd(Restart=always)가 자동으로 재기동하도록 프로세스를 종료한다."""
+    def _delayed_exit():
+        import time
+        time.sleep(0.5)
+        os._exit(0)
+    threading.Thread(target=_delayed_exit, daemon=True).start()
+    return jsonify({"ok": True, "message": "서버를 재시작합니다"})
+
 
 # ═══════════════════════════════════════════════════════════════════════════════
 #  API — Weather

@@ -41,6 +41,9 @@ const API = (() => {
       body: JSON.stringify(data),
     }),
 
+    /** POST /api/restart — Flask 프로세스 재시작 (systemd가 자동 재기동) */
+    restart: () => _fetch('/api/restart', { method: 'POST' }),
+
     /** GET /api/media */
     media: () => _fetch('/api/media'),
 

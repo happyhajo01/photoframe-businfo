@@ -16,7 +16,6 @@
     <button class="btn" onclick="location.href='/'" aria-label="메인으로">← 처음으로</button>
     <div class="page-header__title">
       출근 정보
-      <div class="page-header__meta" id="updateMeta">로딩 중…</div>
     </div>
     <div style="width:90px"></div>
   </div>
@@ -38,7 +37,16 @@
     <button class="btn btn--primary" id="refreshBtn" onclick="window.commutePage.refresh()" aria-label="새로고침">
       🔄 새로고침
     </button>
-    <div class="bus-footer__timer" id="autoReturnTimer">자동 복귀: --분</div>
+    <div class="status-timers">
+      <div class="status-timer">
+        <span class="status-timer__label">다음 갱신</span>
+        <span class="status-timer__value" id="refreshCountdown">--:--</span>
+      </div>
+      <div class="status-timer">
+        <span class="status-timer__label">화면 복귀</span>
+        <span class="status-timer__value" id="autoReturnTimer">--:--</span>
+      </div>
+    </div>
     <button class="btn" onclick="location.href='/'" aria-label="메인으로">처음으로</button>
   </div>
 </div>

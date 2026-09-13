@@ -229,19 +229,26 @@ def _fallback_current() -> dict:
 
 def _dummy_weather() -> dict:
     import random
+    # icon과 label이 항상 짝이 맞도록 쌍으로 선택 (기존엔 icon만 랜덤이라 서로 안 맞았음)
+    icon_labels = [
+        ("sunny_day",         "맑음"),
+        ("mostly_cloudy_day", "구름 많음"),
+        ("cloudy_day",        "흐림"),
+        ("rainy_day",         "비"),
+    ]
     temps = [str(random.randint(10, 30)) for _ in range(3)]
-    icons = ["sunny_day", "mostly_cloudy_day", "cloudy_day", "rainy_day"]
-    icon = random.choice(icons)
+    icon, label = random.choice(icon_labels)
     days = ["월", "화", "수", "목", "금", "토", "일"]
     today = datetime.today()
     forecast = []
     for i in range(3):
         dt = today + timedelta(days=i)
+        f_icon, f_label = random.choice(icon_labels)
         forecast.append({
             "date": dt.strftime("%m/%d"),
             "day": days[dt.weekday()],
-            "icon": f"{random.choice(icons)}.png",
-            "label": "맑음",
+            "icon": f"{f_icon}.png",
+            "label": f_label,
             "max": random.randint(20, 32),
             "min": random.randint(10, 19),
         })
@@ -249,7 +256,7 @@ def _dummy_weather() -> dict:
         "current": {
             "temperature": temps[0],
             "icon": f"{icon}.png",
-            "label": "맑음",
+            "label": label,
             "humidity": "60",
             "is_daytime": True,
             "updated": datetime.now().strftime("%H:%M"),

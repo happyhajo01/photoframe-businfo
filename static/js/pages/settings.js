@@ -39,6 +39,7 @@
     addBusStop:     () => addStopRow('busStopsBody'),
     addCommuteStop: () => addStopRow('commuteStopsBody'),
     save,
+    restart,
   };
 
   async function save() {
@@ -50,6 +51,18 @@
     } catch (e) {
       setStatus('저장 중 오류 발생', 'error');
     }
+  }
+
+  async function restart() {
+    if (!confirm('서버를 재시작할까요? 재시작하는 동안 화면이 잠시 멈춥니다.')) return;
+    setStatus('서버 재시작 중…', '');
+    try {
+      await API.restart();
+    } catch (e) {
+      // 재시작 과정에서 연결이 끊겨도 정상적인 상황
+    }
+    setStatus('재시작 완료 후 자동으로 새로고침됩니다…', 'success');
+    setTimeout(() => location.reload(), 6000);
   }
 
   // ─── Helpers ───────────────────────────────────────────────────────────────

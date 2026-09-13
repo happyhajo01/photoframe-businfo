@@ -4,9 +4,9 @@
  * Auto-returns to main after `autoReturnMinutes`.
  */
 (async () => {
-  const grid      = document.getElementById('stopsGrid');
-  const metaEl    = document.getElementById('updateMeta');
-  const timerEl   = document.getElementById('autoReturnTimer');
+  const grid       = document.getElementById('stopsGrid');
+  const refreshEl  = document.getElementById('refreshCountdown');
+  const timerEl    = document.getElementById('autoReturnTimer');
 
   // ─── Settings ─────────────────────────────────────────────────────────────
   let settings = {};
@@ -17,29 +17,38 @@
   // ─── Clock ────────────────────────────────────────────────────────────────
   Clock.start({ time: '#busClock' });
 
-  // ─── Auto-return countdown ─────────────────────────────────────────────────
-  let returnSecs = returnMinutes * 60;
-  const returnTimer = setInterval(() => {
-    returnSecs--;
-    const m = Math.floor(returnSecs / 60);
-    const s = String(returnSecs % 60).padStart(2, '0');
-    timerEl.textContent = `자동 복귀: ${m}:${s}`;
-    if (returnSecs <= 0) { clearInterval(returnTimer); location.href = '/'; }
+  // ─── Countdown display (다음 갱신 / 화면 복귀) ───────────────────────────────
+  const returnAt = Date.now() + returnMinutes * 60000;
+  let nextLoadAt = Date.now() + busInterval;
+
+  function fmt(ms) {
+    const secs = Math.max(0, Math.round(ms / 1000));
+    return `${Math.floor(secs / 60)}:${String(secs % 60).padStart(2, '0')}`;
+  }
+
+  setInterval(() => {
+    refreshEl.textContent = fmt(nextLoadAt - Date.now());
+    const returnMs = returnAt - Date.now();
+    timerEl.textContent = fmt(returnMs);
+    if (returnMs <= 0) location.href = '/';
   }, 1000);
 
   // ─── Load & render ─────────────────────────────────────────────────────────
   async function load(force = false) {
     try {
       const { stops } = await API.bus(force);
-      metaEl.textContent = `${new Date().toLocaleTimeString('ko-KR')} 갱신`;
       grid.innerHTML = stops.length
         ? stops.map(renderStop).join('')
         : emptyMsg('정류소 설정이 없습니다');
     } catch (e) {
-      metaEl.textContent = '갱신 실패';
       console.warn('Bus load error:', e);
+    } finally {
+      nextLoadAt = Date.now() + busInterval;
+      clearTimeout(loadTimer);
+      loadTimer = setTimeout(() => load(true), busInterval);
     }
   }
+  let loadTimer;
 
   function renderStop(stop) {
     const rows = stop.arrivals.length
@@ -77,8 +86,6 @@
 
   // ─── Start ────────────────────────────────────────────────────────────────
   await load();
-  // force=true: 캐시가 폴링 주기와 같아 항상 HIT되는 문제 방지
-  setInterval(() => load(true), busInterval);
 })();
 
 function esc(str) {
