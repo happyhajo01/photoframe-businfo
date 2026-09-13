@@ -376,7 +376,7 @@ sudo systemctl restart photoframe.service
 ## 부록 A. Pi Vitals 상태 화면 (선택, ST7789 SPI 172×320)
 
 CPU·온도·메모리·SSD·팬 RPM(정식 액티브 쿨러)을 별도의 작은 SPI 화면에 실시간으로 보여주는
-선택 기능입니다. 화면 없이도 `data/pi_vitals_preview.png`로 드라이런 확인이 가능합니다.
+선택 기능입니다. 화면 없이도 `/dev/shm/pi_vitals_preview.png`(RAM, SSD 쓰기 없음)로 드라이런 확인이 가능합니다.
 
 **배선 (기본값, `.env`로 변경 가능):**
 
@@ -419,8 +419,9 @@ nano config/.env
 ./venv/bin/python -m display.pi_vitals
 ```
 
-화면이 아직 없다면 `data/pi_vitals_preview.png`가 1초마다 갱신되는지 확인하세요
-(`ls -la data/pi_vitals_preview.png`로 mtime 변화 확인). 화면이 있다면 SPI로 바로 표시됩니다.
+화면이 아직 없다면 `/dev/shm/pi_vitals_preview.png`가 1초마다 갱신되는지 확인하세요
+(`ls -la /dev/shm/pi_vitals_preview.png`로 mtime 변화 확인 — RAM에 저장되므로 SSD는 전혀 쓰지 않습니다).
+화면이 있다면 SPI로 바로 표시됩니다.
 
 **5) 상시 실행 등록**
 

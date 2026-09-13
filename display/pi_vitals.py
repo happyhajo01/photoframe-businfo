@@ -2,11 +2,13 @@
 Pi Vitals 진입점.
 `python -m display.pi_vitals` 로 직접 실행하거나 pi-vitals.service(systemd)로 상시 실행한다.
 ST7789 모듈이나 st7789 패키지가 아직 없으면 자동으로 드라이런 모드로 전환해
-data/pi_vitals_preview.png에 렌더링 결과를 저장한다 — 화면 도착 전에도 로직을 확인할 수 있다.
+렌더링 결과를 미리보기 이미지로 저장한다 — 화면 도착 전에도 로직을 확인할 수 있다.
+매 틱마다 쓰는 파일이라 SSD가 아닌 /dev/shm(RAM, tmpfs)에 저장해 디스크 쓰기를 만들지 않는다.
 """
 
 import logging
 import time
+from pathlib import Path
 
 from config.settings import (
     BASE_DIR,
@@ -27,7 +29,10 @@ from display.sensors import Sensors
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s")
 logger = logging.getLogger(__name__)
 
-PREVIEW_PATH = BASE_DIR / "data" / "pi_vitals_preview.png"
+# /dev/shm(tmpfs, RAM)이 있으면 그쪽에 저장해 SSD 쓰기 마모를 피한다.
+# 없는 환경(비-Linux 개발 PC 등)에서는 data/ 아래로 대체한다.
+_SHM = Path("/dev/shm")
+PREVIEW_PATH = (_SHM if _SHM.is_dir() else BASE_DIR / "data") / "pi_vitals_preview.png"
 
 
 def _geometry() -> tuple[int, int, int]:
