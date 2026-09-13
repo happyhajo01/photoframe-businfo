@@ -19,6 +19,16 @@
 | `HOLIDAY_CACHE_TTL` | `86400` | 공휴일 캐시 유효시간 (초, 24시간) |
 | `MONITOR_OUTPUT` | `HDMI-A-2` | wlr-randr 모니터 출력 이름 |
 | `MONITOR_CONTROL` | `true` | 모니터 자동 전원 제어 활성화 |
+| `PI_VITALS_ORIENTATION` | `portrait` | Pi Vitals 화면 방향 (`portrait`\|`landscape`) |
+| `PI_VITALS_DIRECTION` | `left` | `landscape`일 때 리본 케이블 방향 (`left`\|`right`) |
+| `PI_VITALS_STYLE` | `round` | 게이지 스타일 (`round`\|`bar`) |
+| `PI_VITALS_REFRESH_SEC` | `1.0` | 화면 갱신 주기 (초) |
+| `PI_VITALS_SPI_PORT` | `0` | SPI 포트 번호 |
+| `PI_VITALS_SPI_DEVICE` | `0` | SPI 디바이스(CE) 번호 |
+| `PI_VITALS_GPIO_DC` | `25` | ST7789 DC 핀 (BCM 번호) |
+| `PI_VITALS_GPIO_RST` | `27` | ST7789 RST 핀 (BCM 번호) |
+| `PI_VITALS_GPIO_BL` | `18` | ST7789 백라이트 핀 (BCM 번호) |
+| `PI_VITALS_DISK_DEVICE` | `sda` | 디스크 활동량 측정 대상 (`/proc/diskstats` 디바이스명) |
 
 ---
 

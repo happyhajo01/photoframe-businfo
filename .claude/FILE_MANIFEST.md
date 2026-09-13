@@ -30,6 +30,11 @@
 | docs/API.md | API 엔드포인트 상세 문서 | 2026-09-10 |
 | docs/VARIABLES.md | 설정값/변수 레퍼런스 | 2026-09-10 |
 | photoframe.service | systemd 서비스 — Flask 백엔드 부팅 시 자동 시작 | 2026-09-10 |
+| display/__init__.py | Pi Vitals 패키지 마커 | 2026-09-13 |
+| display/sensors.py | CPU/온도/메모리/디스크/팬RPM 수집 (psutil + hwmon + diskstats) | 2026-09-13 |
+| display/renderer.py | Pillow로 세로/가로 · 둥근/막대 게이지 프레임 그리기 | 2026-09-13 |
+| display/pi_vitals.py | Pi Vitals 진입점 — SPI 장치 초기화, 메인 루프, 드라이런 폴백 | 2026-09-13 |
+| pi-vitals.service | systemd 서비스 — Pi Vitals(ST7789 SPI) 상시 실행 | 2026-09-13 |
 | scripts/kiosk-start.sh | Flask 대기 후 sway 실행하는 진입 스크립트 (Lite OS) | 2026-09-10 |
 | scripts/sway.config | 키오스크용 sway 최소 설정 (커서 자동 숨김 등) | 2026-09-11 |
 | scripts/kiosk-browser.sh | sway가 exec로 실행하는 Chromium 키오스크 실행 스크립트 | 2026-09-11 |

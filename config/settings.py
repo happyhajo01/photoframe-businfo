@@ -84,3 +84,15 @@ THUMBNAIL_QUALITY = 85
 # ─── Monitor Control (Wayland) ────────────────────────────────────────────────
 MONITOR_OUTPUT  = os.getenv("MONITOR_OUTPUT", "HDMI-A-2")
 MONITOR_ENABLED = os.getenv("MONITOR_CONTROL", "true").lower() == "true"
+
+# ─── Pi Vitals Display (ST7789 SPI, 별도 상시 실행 데몬) ──────────────────────
+PI_VITALS_ORIENTATION = os.getenv("PI_VITALS_ORIENTATION", "portrait")   # portrait | landscape
+PI_VITALS_DIRECTION   = os.getenv("PI_VITALS_DIRECTION", "left")        # landscape 전용: left | right
+PI_VITALS_STYLE       = os.getenv("PI_VITALS_STYLE", "round")           # round | bar
+PI_VITALS_REFRESH_SEC = float(os.getenv("PI_VITALS_REFRESH_SEC", 1.0))
+PI_VITALS_SPI_PORT    = int(os.getenv("PI_VITALS_SPI_PORT", 0))
+PI_VITALS_SPI_DEVICE  = int(os.getenv("PI_VITALS_SPI_DEVICE", 0))
+PI_VITALS_GPIO_DC     = int(os.getenv("PI_VITALS_GPIO_DC", 25))
+PI_VITALS_GPIO_RST    = int(os.getenv("PI_VITALS_GPIO_RST", 27))
+PI_VITALS_GPIO_BL     = int(os.getenv("PI_VITALS_GPIO_BL", 18))
+PI_VITALS_DISK_DEVICE = os.getenv("PI_VITALS_DISK_DEVICE", "sda")       # /proc/diskstats 대상 (USB SSD 부팅 기준)

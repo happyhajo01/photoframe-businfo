@@ -26,6 +26,10 @@
 - 슬라이드 전환 효과 개별 선택 (8가지)
 - `Ctrl+S`로 빠른 저장
 
+### Pi Vitals (선택)
+- 별도 ST7789 SPI 172×320 화면에 CPU·온도·메모리·SSD·팬 RPM 실시간 표시
+- 세로/가로, 좌우 방향, 둥근/막대 게이지를 `.env`로 선택 — [INSTALL_GUIDE.md 부록 A](INSTALL_GUIDE.md#부록-a-pi-vitals-상태-화면-선택-st7789-spi-172320) 참고
+
 ---
 
 ## 빠른 시작
@@ -67,6 +71,10 @@ photoframe-businfo/
 │   ├── image_service.py     # 미디어 탐색, 썸네일 생성
 │   ├── data_service.py      # 설정 파일 읽기/쓰기 + 유효성 검사
 │   └── monitor_service.py   # 모니터 전원 제어 (DPMS)
+├── display/                  # Pi Vitals(선택) — ST7789 SPI 상태 화면 독립 데몬
+│   ├── sensors.py            # CPU/온도/메모리/디스크/팬RPM 수집
+│   ├── renderer.py           # 세로/가로 · 둥근/막대 게이지 렌더링
+│   └── pi_vitals.py          # 진입점 (SPI 초기화 + 메인 루프)
 ├── templates/
 │   ├── base.html            # 공통 레이아웃 (폰트, CSS 임포트)
 │   ├── main.html            # 메인 페이지

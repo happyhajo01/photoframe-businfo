@@ -1,0 +1,17 @@
+[Unit]
+Description=Pi Vitals (ST7789 SPI status display)
+After=multi-user.target
+
+[Service]
+Type=simple
+User=pi
+WorkingDirectory=/home/pi/photoframe-businfo
+ExecStart=/home/pi/photoframe-businfo/venv/bin/python -m display.pi_vitals
+Restart=always
+RestartSec=5
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=pi-vitals
+
+[Install]
+WantedBy=multi-user.target

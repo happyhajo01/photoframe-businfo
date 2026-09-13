@@ -369,6 +369,68 @@ sudo systemctl restart photoframe.service
 | `~/photoframe-businfo/scripts/kiosk-browser.sh` | Chromium 키오스크 실행 스크립트 (저장소에 포함) |
 | `~/.bash_profile` | 콘솔 자동 로그인 시 키오스크 실행 트리거 (이번 가이드에서 생성) |
 | `/etc/systemd/system/photoframe.service` | 백엔드 자동 실행 등록 파일 |
+| `~/photoframe-businfo/display/*.py` | Pi Vitals(ST7789 SPI 상태 화면) 코드 — 선택 기능, 부록 A 참고 |
+
+---
+
+## 부록 A. Pi Vitals 상태 화면 (선택, ST7789 SPI 172×320)
+
+CPU·온도·메모리·SSD·팬 RPM(정식 액티브 쿨러)을 별도의 작은 SPI 화면에 실시간으로 보여주는
+선택 기능입니다. 화면 없이도 `data/pi_vitals_preview.png`로 드라이런 확인이 가능합니다.
+
+**배선 (기본값, `.env`로 변경 가능):**
+
+| 화면 핀 | 라즈베리파이 핀 (BCM) |
+|---------|------------------------|
+| DC | GPIO25 |
+| RST | GPIO27 |
+| BL(백라이트) | GPIO18 |
+| CS | SPI0 CE0 (GPIO8) |
+| SCLK / MOSI | SPI0 (GPIO11 / GPIO10) |
+
+**1) SPI 활성화**
+
+```bash
+sudo raspi-config    # Interface Options → SPI → Enable
+sudo reboot
+```
+
+**2) 패키지 설치 (`requirements.txt`에 이미 포함됨)**
+
+```bash
+cd ~/photoframe-businfo
+source venv/bin/activate
+pip install -r requirements.txt
+```
+
+**3) `.env` 설정 확인/변경**
+
+```bash
+nano config/.env
+# PI_VITALS_ORIENTATION=portrait|landscape
+# PI_VITALS_DIRECTION=left|right   (landscape일 때만)
+# PI_VITALS_STYLE=round|bar
+# PI_VITALS_DISK_DEVICE=sda        (lsblk로 실제 SSD 디바이스명 확인)
+```
+
+**4) 직접 실행해서 확인**
+
+```bash
+./venv/bin/python -m display.pi_vitals
+```
+
+화면이 아직 없다면 `data/pi_vitals_preview.png`가 1초마다 갱신되는지 확인하세요
+(`ls -la data/pi_vitals_preview.png`로 mtime 변화 확인). 화면이 있다면 SPI로 바로 표시됩니다.
+
+**5) 상시 실행 등록**
+
+```bash
+sudo cp pi-vitals.service /etc/systemd/system/pi-vitals.service
+sudo sed -i "s#/home/pi#$HOME#g; s#^User=pi#User=$USER#" /etc/systemd/system/pi-vitals.service
+sudo systemctl daemon-reload
+sudo systemctl enable --now pi-vitals.service
+sudo systemctl status pi-vitals.service
+```
 
 ---
 
