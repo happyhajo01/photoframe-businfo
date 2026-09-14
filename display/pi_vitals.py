@@ -35,17 +35,20 @@ _SHM = Path("/dev/shm")
 PREVIEW_PATH = (_SHM if _SHM.is_dir() else BASE_DIR / "data") / "pi_vitals_preview.png"
 
 
-def _geometry() -> tuple[int, int, int]:
-    """(width, height, rotation)을 반환한다.
+def _geometry() -> tuple[int, int, int, int, int]:
+    """(width, height, rotation, offset_left, offset_top)을 반환한다.
 
     width/height는 패널의 실제 제조 방향(세로, 172x320) 기준이다.
-    rotation은 st7789 라이브러리 규약(0/90/180/270)을 따른다 — 실제 모듈이 도착하면
-    이 값이 라이브러리 문서(README)의 width/height 요구사항과 일치하는지 반드시 확인할 것.
+    rotation은 st7789 라이브러리 규약(0/90/180/270)을 따른다.
+    이 패널(GMT1475SPI, Waveshare 1.47인치 계열)은 컨트롤러 GRAM(240x320) 대비
+    좌우 34px 오프셋이 있음 — st7789 라이브러리는 240x240/240x135 등만 자동
+    인식하고 172x320은 offset 0으로 처리해 화면에 아무것도 안 그려지므로 직접 지정한다.
+    가로 모드(offset_top=34)는 실기기로 검증 안 됨 — 확인 필요.
     """
     if PI_VITALS_ORIENTATION == "landscape":
         rotation = 90 if PI_VITALS_DIRECTION == "left" else 270
-        return 172, 320, rotation
-    return 172, 320, 0
+        return 172, 320, rotation, 0, 34
+    return 172, 320, 0, 34, 0
 
 
 def _init_device():
@@ -55,7 +58,7 @@ def _init_device():
         logger.warning("st7789 패키지 없음 — 드라이런 모드로 전환 (pip install st7789 필요)")
         return None
 
-    width, height, rotation = _geometry()
+    width, height, rotation, offset_left, offset_top = _geometry()
     try:
         device = st7789.ST7789(
             port=PI_VITALS_SPI_PORT,
@@ -66,7 +69,10 @@ def _init_device():
             width=width,
             height=height,
             rotation=rotation,
-            spi_speed_hz=60_000_000,
+            offset_left=offset_left,
+            offset_top=offset_top,
+            # 점퍼선 배선 기준 60MHz는 너무 빨라 초기화 명령이 깨질 수 있음 — 우선 낮은 속도로 검증
+            spi_speed_hz=4_000_000,
         )
         device.begin()
         return device
