@@ -75,6 +75,14 @@ def _init_device():
             spi_speed_hz=4_000_000,
         )
         device.begin()
+
+        # 설치된 st7789 라이브러리는 정사각형(240x240류) 패널을 가정하고 초기화 시 MADCTL을
+        # 0x70(행/열 교환, MV=1)으로 고정한다. 172x320처럼 가로/세로가 다른 패널에서는 이 교환
+        # 때문에 set_window()가 넣는 X/Y 좌표가 패널 내부에서 뒤바뀌어 그림이 화면 밖에 그려져
+        # 아무것도 안 보이게 된다. MADCTL을 다시 써서 행/열 교환을 끈다(MV=0).
+        device.command(0x36)  # MADCTL
+        device.data(0x00)
+
         return device
     except Exception:
         logger.exception("ST7789 초기화 실패 — 드라이런 모드로 전환 (배선/SPI 활성화 확인)")
