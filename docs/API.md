@@ -57,6 +57,7 @@ Base URL: `http://<라즈베리파이IP>:5000`
 **응답 예시:**
 ```json
 {
+  "ok": true,
   "stops": [
     {
       "name": "보람1단지",
@@ -76,10 +77,24 @@ Base URL: `http://<라즈베리파이IP>:5000`
 }
 ```
 
+`ok`가 `false`이면 정류소 중 하나 이상에서 API 호출이 실패해 더미 데이터로 대체됐다는 뜻입니다
+(TEST_MODE나 API 키 미설정으로 인한 더미 데이터는 오류가 아니므로 `ok: true`).
+
 ---
 
 ### `GET /api/commute?refresh=<bool>`
 출근 설정 정류소의 버스 도착 정보를 반환합니다. `/api/bus`와 동일한 구조이며 최대 2개 도착 정보만 포함합니다.
+
+---
+
+### `GET /api/network`
+Wi-Fi 연결 상태를 반환합니다 (nmcli 기반, NetworkManager 필요).
+
+**응답 예시:**
+```json
+{ "connected": true, "ssid": "MyHomeWifi" }
+{ "connected": false, "ssid": null }
+```
 
 ---
 

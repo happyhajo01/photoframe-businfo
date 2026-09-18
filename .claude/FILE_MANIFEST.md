@@ -22,6 +22,7 @@
 | services/holiday_service.py | 공공데이터 공휴일 API 조회 | 2026-09-10 |
 | services/image_service.py | 미디어 목록 탐색 및 썸네일 생성 | 2026-09-10 |
 | services/monitor_service.py | 모니터 전원 제어 (DPMS: vcgencmd → wlopm → xset → wlr-randr) | 2026-09-10 |
+| services/network_service.py | Wi-Fi 자동 연결 및 상태 조회 (nmcli) | 2026-09-18 |
 | templates/*.html | 페이지 템플릿 (base/main/bus/commute/settings/error) | 2026-09-10 |
 | static/css/*.css | 디자인 토큰 및 페이지별 스타일 | 2026-09-10 |
 | static/js/**/*.js | API 클라이언트, 시계·슬라이드쇼 모듈, 페이지 컨트롤러 | 2026-09-10 |

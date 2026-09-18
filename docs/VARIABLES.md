@@ -12,6 +12,8 @@
 | `FLASK_DEBUG` | `false` | 디버그 모드 (개발 시 `true`) |
 | `SECRET_KEY` | — | Flask 세션 암호화 키 (필수 변경) |
 | `TEST_MODE` | `false` | `true`이면 실제 API 대신 더미 데이터 사용 |
+| `WIFI_SSID` | — | 자동 연결할 Wi-Fi 이름 (비우면 자동 연결 시도 안 함, nmcli 필요) |
+| `WIFI_PASSWORD` | — | 위 Wi-Fi 비밀번호 |
 | `WEATHER_NX` | `61` | 기상청 격자 X좌표 (서울 노원) |
 | `WEATHER_NY` | `127` | 기상청 격자 Y좌표 (서울 노원) |
 | `BUS_CACHE_TTL` | `60` | 버스 캐시 유효시간 (초) |

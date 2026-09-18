@@ -47,6 +47,9 @@ const API = (() => {
     /** GET /api/media */
     media: () => _fetch('/api/media'),
 
+    /** GET /api/network — Wi-Fi 연결 상태 */
+    network: () => _fetch('/api/network'),
+
     /** GET /api/thumbnail?path=... */
     thumbnail: (path) => _fetch(`/api/thumbnail?path=${encodeURIComponent(path)}`),
   };

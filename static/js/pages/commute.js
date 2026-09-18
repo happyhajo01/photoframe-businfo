@@ -7,6 +7,7 @@
   const grid      = document.getElementById('stopsGrid');
   const refreshEl = document.getElementById('refreshCountdown');
   const timerEl   = document.getElementById('autoReturnTimer');
+  const warningEl = document.getElementById('networkWarning');
 
   // ─── Settings ─────────────────────────────────────────────────────────────
   let settings = {};
@@ -36,7 +37,7 @@
   // ─── Load & render ─────────────────────────────────────────────────────────
   async function load(force = false) {
     try {
-      const { stops } = await API.commute(force);
+      const { stops, ok } = await API.commute(force);
 
       // Flatten: one card per (stop × route)
       const cards = [];
@@ -52,8 +53,10 @@
       } else {
         grid.innerHTML = `<div style="text-align:center;color:var(--color-text-muted);padding:60px">도착 정보를 가져오는 중…</div>`;
       }
+      warningEl.hidden = ok;
     } catch (e) {
       console.warn('Commute load error:', e);
+      warningEl.hidden = false;
     } finally {
       nextLoadAt = Date.now() + busInterval;
       clearTimeout(loadTimer);

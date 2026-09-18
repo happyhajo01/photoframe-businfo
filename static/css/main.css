@@ -56,6 +56,18 @@
   color: var(--color-text);
 }
 
+/* ─── Wi-Fi status icon ──────────────────────────────────────────────────────── */
+.wifi-status {
+  font-size: 36px;
+  line-height: 1;
+  filter: drop-shadow(0 2px 6px rgba(0,0,0,0.5));
+  opacity: 0.9;
+}
+.wifi-status.offline {
+  opacity: 0.5;
+  filter: grayscale(1) drop-shadow(0 2px 6px rgba(0,0,0,0.5));
+}
+
 /* ─── Middle section ─────────────────────────────────────────────────────────── */
 .middle {
   display: flex;

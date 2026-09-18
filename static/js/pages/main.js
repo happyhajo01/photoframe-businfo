@@ -11,6 +11,7 @@
   const forecastEl= document.getElementById('forecastBlock');
   const effectBtn = document.getElementById('effectToggle');
   const nightEl   = document.getElementById('nightOverlay');
+  const wifiEl    = document.getElementById('wifiStatus');
 
   // ─── Settings ─────────────────────────────────────────────────────────────
   let settings = {};
@@ -90,6 +91,21 @@
 
   loadWeather();
   setInterval(loadWeather, weatherInterval);
+
+  // ─── Wi-Fi status ─────────────────────────────────────────────────────────
+  async function loadNetwork() {
+    try {
+      const { connected } = await API.network();
+      wifiEl.textContent = connected ? '📶' : '📵';
+      wifiEl.classList.toggle('offline', !connected);
+    } catch (e) {
+      wifiEl.textContent = '📵';
+      wifiEl.classList.add('offline');
+    }
+  }
+
+  loadNetwork();
+  setInterval(loadNetwork, 20000);
 
   // ─── Night mode ────────────────────────────────────────────────────────────
   function checkNightMode() {

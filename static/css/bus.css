@@ -18,6 +18,22 @@
   text-align: center;
   color: var(--color-text);
 }
+/* ─── Network/API error warning ──────────────────────────────────────────────── */
+.network-warning {
+  flex-shrink: 0;
+  padding: var(--space-sm) var(--space-lg);
+  text-align: center;
+  font-size: 22px;
+  font-weight: 700;
+  color: #fff;
+  background: #c0392b;
+  animation: network-warning-blink 1.5s ease-in-out infinite;
+}
+@keyframes network-warning-blink {
+  0%, 100% { background: #c0392b; }
+  50%      { background: #e74c3c; }
+}
+
 .bus-page {
   display: flex;
   flex-direction: column;

@@ -19,6 +19,7 @@ from services import (
     HolidayService,
     ImageService,
     MonitorService,
+    NetworkService,
     WeatherService,
 )
 
@@ -42,6 +43,7 @@ weather_svc = WeatherService()
 holiday_svc = HolidayService()
 image_svc   = ImageService()
 monitor_svc = MonitorService()
+network_svc = NetworkService()
 
 
 # ═══════════════════════════════════════════════════════════════════════════════
@@ -122,13 +124,24 @@ def api_weather():
 def api_bus():
     force = request.args.get("refresh", "false").lower() == "true"
     stops = data_svc.get_bus_stops().get("stops", [])
-    return jsonify({"stops": bus_svc.get_stops_info(stops, force)})
+    result, ok = bus_svc.get_stops_info(stops, force)
+    return jsonify({"stops": result, "ok": ok})
 
 @app.route("/api/commute")
 def api_commute():
     force = request.args.get("refresh", "false").lower() == "true"
     stops = data_svc.get_commute_stops().get("stops", [])
-    return jsonify({"stops": bus_svc.get_commute_info(stops, force)})
+    result, ok = bus_svc.get_commute_info(stops, force)
+    return jsonify({"stops": result, "ok": ok})
+
+
+# ═══════════════════════════════════════════════════════════════════════════════
+#  API — Network
+# ═══════════════════════════════════════════════════════════════════════════════
+
+@app.route("/api/network")
+def api_network():
+    return jsonify(network_svc.get_status())
 
 
 # ═══════════════════════════════════════════════════════════════════════════════
@@ -199,6 +212,7 @@ def _parse_hhmm(s: str) -> tuple[int, int]:
 # ─── Entry point ─────────────────────────────────────────────────────────────
 
 if __name__ == "__main__":
+    threading.Thread(target=network_svc.connect, daemon=True).start()
     t = threading.Thread(target=_monitor_scheduler, daemon=True)
     t.start()
     app.run(host=HOST, port=PORT, debug=DEBUG)

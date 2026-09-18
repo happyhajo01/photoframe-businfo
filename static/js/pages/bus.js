@@ -7,6 +7,7 @@
   const grid       = document.getElementById('stopsGrid');
   const refreshEl  = document.getElementById('refreshCountdown');
   const timerEl    = document.getElementById('autoReturnTimer');
+  const warningEl  = document.getElementById('networkWarning');
 
   // ─── Settings ─────────────────────────────────────────────────────────────
   let settings = {};
@@ -36,12 +37,14 @@
   // ─── Load & render ─────────────────────────────────────────────────────────
   async function load(force = false) {
     try {
-      const { stops } = await API.bus(force);
+      const { stops, ok } = await API.bus(force);
       grid.innerHTML = stops.length
         ? stops.map(renderStop).join('')
         : emptyMsg('정류소 설정이 없습니다');
+      warningEl.hidden = ok;
     } catch (e) {
       console.warn('Bus load error:', e);
+      warningEl.hidden = false;
     } finally {
       nextLoadAt = Date.now() + busInterval;
       clearTimeout(loadTimer);

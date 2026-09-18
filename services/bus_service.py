@@ -37,33 +37,35 @@ class BusService:
 
     # ─── Public ──────────────────────────────────────────────────────────────
 
-    def get_stops_info(self, stops: list[dict], force_refresh: bool = False) -> list[dict]:
-        """Return arrival data for all configured stops."""
+    def get_stops_info(self, stops: list[dict], force_refresh: bool = False) -> tuple[list[dict], bool]:
+        """Return (stops, ok) — ok is False if any stop's last fetch hit a real API error."""
         result = []
+        ok = True
         for stop in stops:
             stop_id   = stop.get("id", "")
             stop_name = stop.get("name", "")
             buses     = stop.get("buses", [])
-            arrivals  = self._get_arrivals(stop_id, buses, force_refresh)
+            arrivals, stop_ok = self._get_arrivals(stop_id, buses, force_refresh)
+            ok = ok and stop_ok
             result.append({"name": stop_name, "id": stop_id, "arrivals": arrivals})
-        return result
+        return result, ok
 
     # ─── Caching ─────────────────────────────────────────────────────────────
 
-    def _get_arrivals(self, stop_id: str, buses: list[str], force: bool) -> list[dict]:
+    def _get_arrivals(self, stop_id: str, buses: list[str], force: bool) -> tuple[list[dict], bool]:
         now = time.time()
         entry = self._cache.get(stop_id)
         if not force and entry and now - entry["time"] < BUS_CACHE_TTL:
-            return entry["data"]
+            return entry["data"], entry["ok"]
 
         elapsed = now - self._last_fetch_time
         if elapsed < _FETCH_INTERVAL:
             time.sleep(_FETCH_INTERVAL - elapsed)
         self._last_fetch_time = time.time()
-        data = self._fetch(stop_id, buses)
-        self._cache[stop_id] = {"data": data, "time": time.time()}
+        data, ok = self._fetch(stop_id, buses)
+        self._cache[stop_id] = {"data": data, "time": time.time(), "ok": ok}
         self._persist_cache()
-        return data
+        return data, ok
 
     def _persist_cache(self):
         try:
@@ -77,11 +79,11 @@ class BusService:
 
     # ─── Fetch ───────────────────────────────────────────────────────────────
 
-    def _fetch(self, stop_id: str, buses: list[str]) -> list[dict]:
+    def _fetch(self, stop_id: str, buses: list[str]) -> tuple[list[dict], bool]:
         if TEST_MODE or not _is_real_api_key(BUS_API_KEY):
             reason = "TEST_MODE" if TEST_MODE else "API키 미설정"
             logger.info("[BUS] stop=%s 더미데이터 사용 (%s)", stop_id, reason)
-            return _dummy_arrivals(buses)
+            return _dummy_arrivals(buses), True
         try:
             logger.info("[BUS 요청] stop=%s  설정버스=%s", stop_id, buses)
             resp = requests.get(
@@ -106,23 +108,24 @@ class BusService:
                 )
                 logger.info("  표출  노선=%-8s  %s", r["route"], times_str or "도착정보없음")
 
-            return result
+            return result, True
         except Exception as e:
             logger.warning("[BUS 오류] stop=%s  %s", stop_id, e)
-            return _dummy_arrivals(buses)  # API 실패 시 더미 데이터 폴백
+            return _dummy_arrivals(buses), False  # API 실패 시 더미 데이터 폴백
 
     # ─── Commute helper ──────────────────────────────────────────────────────
 
-    def get_commute_info(self, stops: list[dict], force_refresh: bool = False) -> list[dict]:
+    def get_commute_info(self, stops: list[dict], force_refresh: bool = False) -> tuple[list[dict], bool]:
         """Same as get_stops_info but returns only first 2 arrivals per bus."""
+        stops_info, ok = self.get_stops_info(stops, force_refresh)
         result = []
-        for stop in self.get_stops_info(stops, force_refresh):
+        for stop in stops_info:
             arrivals = [
                 {**arr, "times": arr.get("times", [])[:2]}
                 for arr in stop.get("arrivals", [])
             ]
             result.append({**stop, "arrivals": arrivals})
-        return result
+        return result, ok
 
 
 # ─── API key validation ──────────────────────────────────────────────────────

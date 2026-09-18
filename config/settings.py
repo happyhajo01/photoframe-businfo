@@ -20,6 +20,10 @@ SECRET_KEY = os.getenv("SECRET_KEY", "change-me-in-production")
 # ─── Test / Development ──────────────────────────────────────────────────────
 TEST_MODE = os.getenv("TEST_MODE", "false").lower() == "true"
 
+# ─── Wi-Fi 자동 연결 (nmcli) ──────────────────────────────────────────────────
+WIFI_SSID     = os.getenv("WIFI_SSID", "")
+WIFI_PASSWORD = os.getenv("WIFI_PASSWORD", "")
+
 # ─── Paths ───────────────────────────────────────────────────────────────────
 DATA_DIR        = BASE_DIR / "data"
 STATIC_DIR      = BASE_DIR / "static"
