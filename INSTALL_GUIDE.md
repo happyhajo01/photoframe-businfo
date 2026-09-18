@@ -80,7 +80,7 @@ sudo raspi-config
 # 공통 필수 패키지
 sudo apt install -y git python3-venv python3-pip python3-dev \
     build-essential libjpeg-dev zlib1g-dev libwebp-dev \
-    curl fonts-noto-cjk
+    curl fonts-noto-cjk fonts-noto-color-emoji
 
 # 화면 표시용 키오스크 패키지 (sway: 터치 시 마우스 커서 자동 숨김 지원)
 sudo apt install -y sway
@@ -89,7 +89,9 @@ sudo apt install -y sway
 sudo apt install -y chromium-browser || sudo apt install -y chromium
 ```
 
-> `fonts-noto-cjk`는 한글이 화면에 깨지지 않고 나오게 하는 한글 글꼴입니다.
+> `fonts-noto-cjk`는 한글이 화면에 깨지지 않고 나오게 하는 한글 글꼴이고,
+> `fonts-noto-color-emoji`는 화면 곳곳의 이모지 아이콘(📶🚌⚙️ 등)이 네모 박스(□/☒)로
+> 깨지지 않게 하는 이모지 글꼴입니다.
 
 ---
 
@@ -350,6 +352,7 @@ sudo systemctl restart photoframe.service
 | 부팅해도 로그인 화면에서 멈춤 | STEP 2의 `raspi-config` → Console Autologin 재확인 |
 | SSH로는 잘 되는데 화면엔 안 뜸 | `~/.bash_profile`이 정확히 생성됐는지, tty1 로그인인지 확인(`tty` 명령으로 확인) |
 | 한글이 네모(□)로 깨짐 | `sudo apt install fonts-noto-cjk` 후 재부팅 |
+| 이모지 아이콘이 X 박스로 깨짐 | `sudo apt install fonts-noto-color-emoji` 후 재부팅 |
 | 버스/날씨 정보가 "정보 없음" | `.env`의 API 키가 실제 발급받은 값인지 확인. 발급 후 몇 분~몇 시간 지연될 수 있음 |
 | 포트 5000 충돌 오류 | `sudo systemctl restart photoframe.service` (systemd가 자동으로 재시작을 처리함) |
 | 전원 재연결 후 화면 안 뜸 | STEP 10을 다시 수행해 "전원 플러그 뽑았다 꽂기" 테스트로 재현 후, `journalctl -u photoframe.service -b`(이번 부팅 로그)로 원인 확인 |
