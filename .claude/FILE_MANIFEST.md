@@ -36,6 +36,9 @@
 | display/renderer.py | Pillow로 세로/가로 · 둥근/막대 게이지 프레임 그리기 | 2026-09-13 |
 | display/pi_vitals.py | Pi Vitals 진입점 — SPI 장치 초기화, 메인 루프, 드라이런 폴백 | 2026-09-13 |
 | pi-vitals.service | systemd 서비스 — Pi Vitals(ST7789 SPI) 상시 실행 | 2026-09-13 |
+| cooling/__init__.py | 외부 릴레이 팬 패키지 마커 | 2026-09-19 |
+| cooling/external_fan.py | SoC 온도 기반 외부 릴레이 팬 on/off 제어 (gpiozero) | 2026-09-19 |
+| external-fan.service | systemd 서비스 — 외부 릴레이 팬 제어 상시 실행 | 2026-09-19 |
 | scripts/kiosk-start.sh | Flask 대기 후 sway 실행하는 진입 스크립트 (Lite OS) | 2026-09-10 |
 | scripts/sway.config | 키오스크용 sway 최소 설정 (커서 자동 숨김 등) | 2026-09-11 |
 | scripts/kiosk-browser.sh | sway가 exec로 실행하는 Chromium 키오스크 실행 스크립트 | 2026-09-11 |

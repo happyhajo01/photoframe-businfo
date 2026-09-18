@@ -31,6 +31,10 @@
 | `PI_VITALS_GPIO_RST` | `27` | ST7789 RST 핀 (BCM 번호) |
 | `PI_VITALS_GPIO_BL` | `18` | ST7789 백라이트 핀 (BCM 번호) |
 | `PI_VITALS_DISK_DEVICE` | `sda` | 디스크 활동량 측정 대상 (`/proc/diskstats` 디바이스명) |
+| `EXTERNAL_FAN_GPIO_PIN` | `17` | 외부 릴레이 팬 제어용 GPIO 핀 (BCM 번호) |
+| `EXTERNAL_FAN_ON_TEMP` | `65.7` | 이 온도(°C) 이상이면 외부 팬 켜짐 |
+| `EXTERNAL_FAN_OFF_TEMP` | `60.7` | 이 온도(°C) 이하면 외부 팬 꺼짐 (히스테리시스) |
+| `EXTERNAL_FAN_POLL_SEC` | `5` | 온도 확인 주기 (초) |
 
 ---
 

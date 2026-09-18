@@ -1,0 +1,17 @@
+[Unit]
+Description=External relay fan control (SoC temperature based)
+After=multi-user.target
+
+[Service]
+Type=simple
+User=pi
+WorkingDirectory=/home/pi/photoframe-businfo
+ExecStart=/home/pi/photoframe-businfo/venv/bin/python -m cooling.external_fan
+Restart=always
+RestartSec=5
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=external-fan
+
+[Install]
+WantedBy=multi-user.target

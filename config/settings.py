@@ -100,3 +100,9 @@ PI_VITALS_GPIO_DC     = int(os.getenv("PI_VITALS_GPIO_DC", 25))
 PI_VITALS_GPIO_RST    = int(os.getenv("PI_VITALS_GPIO_RST", 27))
 PI_VITALS_GPIO_BL     = int(os.getenv("PI_VITALS_GPIO_BL", 18))
 PI_VITALS_DISK_DEVICE = os.getenv("PI_VITALS_DISK_DEVICE", "sda")       # /proc/diskstats 대상 (USB SSD 부팅 기준)
+
+# ─── External Fan (릴레이 제어, 별도 상시 실행 데몬) ──────────────────────────
+EXTERNAL_FAN_GPIO_PIN  = int(os.getenv("EXTERNAL_FAN_GPIO_PIN", 17))
+EXTERNAL_FAN_ON_TEMP   = float(os.getenv("EXTERNAL_FAN_ON_TEMP", 65.7))
+EXTERNAL_FAN_OFF_TEMP  = float(os.getenv("EXTERNAL_FAN_OFF_TEMP", 60.7))
+EXTERNAL_FAN_POLL_SEC  = float(os.getenv("EXTERNAL_FAN_POLL_SEC", 5))

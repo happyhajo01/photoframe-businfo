@@ -373,6 +373,7 @@ sudo systemctl restart photoframe.service
 | `~/.bash_profile` | 콘솔 자동 로그인 시 키오스크 실행 트리거 (이번 가이드에서 생성) |
 | `/etc/systemd/system/photoframe.service` | 백엔드 자동 실행 등록 파일 |
 | `~/photoframe-businfo/display/*.py` | Pi Vitals(ST7789 SPI 상태 화면) 코드 — 선택 기능, 부록 A 참고 |
+| `~/photoframe-businfo/cooling/*.py` | 외부 릴레이 팬 제어 코드 — 선택 기능, 부록 B 참고 |
 
 ---
 
@@ -435,6 +436,88 @@ sudo systemctl daemon-reload
 sudo systemctl enable --now pi-vitals.service
 sudo systemctl status pi-vitals.service
 ```
+
+---
+
+## 부록 B. 외부 릴레이 팬 (선택, SoC 온도 기반 자동 on/off)
+
+정품 액티브 쿨러 외에 케이스 배기 등을 위한 **DC 5V 팬을 릴레이로 추가 제어**하는 기능입니다.
+SoC 온도가 65.7°C 이상이면 켜지고, 60.7°C 이하로 내려가면 꺼집니다(히스테리시스로
+경계 온도에서 릴레이가 잦게 딸깍거리는 것을 방지). `cooling/external_fan.py`가
+`external-fan.service`로 상시 실행되며, Flask 앱과 무관하게 독립적으로 동작합니다.
+
+### 필요한 부품
+
+- DC 5V 코일 릴레이 (접점 전류 정격이 팬 소비전류보다 여유 있게)
+- NPN 트랜지스터 1개 (2N2222, S8050, BC547 등 — GPIO는 릴레이 코일을 직접 구동할
+  전류가 안 나오므로 반드시 필요)
+- 저항 1kΩ (GPIO → 트랜지스터 베이스 전류 제한)
+- 다이오드 1개 (1N4001, 1N4148 등 — 릴레이 코일 양단에 거는 **플라이백 다이오드**.
+  코일이 꺼지는 순간 발생하는 역기전력이 트랜지스터를 태우는 걸 막아주므로 생략 금지)
+- 외부 DC 5V 전원 (라즈베리파이 자체 5V 핀에서 따오지 말고 **별도 어댑터/파워서플라이** 사용 권장 —
+  릴레이 코일 + 팬 전류가 라즈베리파이 전원부에 영향을 주지 않도록)
+- DC 5V 팬
+
+### 배선도
+
+```
+[제어부] 라즈베리파이가 릴레이 코일을 켜고 끔
+
+  GPIO17 ──[1kΩ 저항]── 트랜지스터 베이스(B)
+  라즈베리파이 GND ───────────────────────────── 트랜지스터 이미터(E)
+                                                      │
+                                    (라즈베리파이 GND와 외부 5V 전원 GND를
+                                     반드시 서로 연결 — 공통 그라운드)
+
+  외부 5V(+) ──┬── 릴레이 코일(+)
+               │
+               ├── 플라이백 다이오드 캐소드(띠 표시 쪽)
+               │
+  릴레이 코일(−) ┴── 다이오드 애노드 ── 트랜지스터 컬렉터(C)
+
+[부하부] 릴레이 접점이 팬 전원 자체를 스위칭 (제어부와 전기적으로 분리된 별개 회로)
+
+  외부 5V(+) ── 릴레이 COM 단자
+  릴레이 NO 단자 ── 팬(+)
+  팬(−) ── 외부 5V(GND)
+```
+
+**안전 주의사항**
+- 플라이백 다이오드 방향 반대로 달면 보호 효과가 없으니 캐소드(띠)가 코일 (+)/5V 쪽을 향하는지 확인하세요.
+- 라즈베리파이 GND와 외부 5V 전원의 GND를 연결하지 않으면 트랜지스터가 스위칭되지 않습니다(공통 그라운드 필수).
+- GPIO17은 기본값일 뿐이며 `.env`의 `EXTERNAL_FAN_GPIO_PIN`으로 다른 핀 사용 가능(SPI용 GPIO 7/8/9/10/11, ST7789용 GPIO 18/25/27은 피하세요).
+
+### 설치
+
+**1) 패키지 설치 (`requirements.txt`에 이미 포함됨)**
+```bash
+cd ~/photoframe-businfo
+source venv/bin/activate
+pip install -r requirements.txt
+```
+
+**2) `.env` 설정 확인/변경**
+```bash
+nano config/.env
+# EXTERNAL_FAN_GPIO_PIN=17
+# EXTERNAL_FAN_ON_TEMP=65.7
+# EXTERNAL_FAN_OFF_TEMP=60.7
+```
+
+**3) 직접 실행해서 확인**
+```bash
+./venv/bin/python -m cooling.external_fan
+```
+`vcgencmd measure_temp`로 확인한 현재 온도가 설정한 ON 온도를 넘으면 릴레이가
+"딸깍" 소리를 내며 붙고 팬이 돌아야 정상입니다. 임시로 `EXTERNAL_FAN_ON_TEMP`를
+현재 온도보다 낮게 낮춰서 테스트해도 됩니다.
+
+**4) 상시 실행 등록 — 아직 진행하지 마세요**
+
+> 회로가 아직 실제로 조립되지 않은 상태입니다. 3번(직접 실행 테스트)까지 확인해서
+> 릴레이가 정상적으로 딸깍이고 팬이 도는 것까지 검증한 뒤, 상시 실행(systemd) 등록이
+> 필요하면 그때 다시 요청해주세요. 등록 명령은 `external-fan.service` 파일에 이미
+> 준비되어 있습니다 (`pi-vitals.service`와 동일한 방식).
 
 ---
 

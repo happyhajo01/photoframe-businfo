@@ -6,3 +6,5 @@ Pillow==11.1.0
 gunicorn==23.0.0
 psutil==6.1.1
 st7789  # 버전 미고정 — 설치 시 최신 버전 확인 권장 (pip install st7789)
+gpiozero  # 외부 릴레이 팬 GPIO 제어 (cooling/external_fan.py)
+lgpio     # 라즈베리파이5(RP1)에서 gpiozero가 사용하는 백엔드
